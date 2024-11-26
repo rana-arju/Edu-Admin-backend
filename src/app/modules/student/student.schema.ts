@@ -1,5 +1,4 @@
 import { Schema, model } from 'mongoose';
-import bcrypt from 'bcrypt';
 import {
   TGuardian,
   TStudent,
@@ -8,7 +7,6 @@ import {
   StudentModel,
 } from './student.interface';
 import validator from 'validator';
-import config from '../../config';
 
 function capitalize(value: string): string {
   return value
@@ -89,7 +87,12 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       type: String,
       required: [true, 'Student ID is required.'],
     },
-    password: String,
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'User ID is required.'],
+      unique: true,
+      ref: 'User',
+    },
     name: {
       type: userNameSchema,
       required: [true, 'Name field is required.'],
@@ -144,11 +147,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       type: localSchema,
       required: [true, 'Local guardian information is required.'],
     },
-    isActive: {
-      type: String,
-      enum: ['active', 'inactive'],
-      default: 'active',
-    },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -160,7 +158,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
 // Virtual
 
 studentSchema.virtual('fullName').get(function () {
-  return `${this.name.firstName}  ${this.name.lastName}`
+  return `${this.name.firstName}  ${this.name.lastName}`;
 });
 
 /// middleware for name capitalize
@@ -175,19 +173,6 @@ userNameSchema.pre('save', function (next) {
   if (this.isModified('middleName') && this.middleName) {
     this.middleName = capitalize(this.middleName);
   }
-  next();
-});
-
-studentSchema.pre('save', async function (next) {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
-  user.password = await bcrypt.hash(user.password, Number(config.salt_rounds));
-  next();
-});
-
-studentSchema.post('save', function (doc, next) {
-  doc.password = '';
-
   next();
 });
 
@@ -209,14 +194,6 @@ studentSchema.pre('aggregate', function (next) {
   next();
 });
 
-// creating a custom instance method
-
-/* studentSchema.methods.isUserExists = async function (id:string) {
-  const existingUser = await Student.findOne({id})
-  return existingUser
-  
-}
-  */
 // creating a custom method
 
 studentSchema.statics.isUserExists = async function (id: string) {

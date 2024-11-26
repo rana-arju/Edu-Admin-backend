@@ -14,97 +14,59 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.studentController = void 0;
 const student_service_1 = require("./student.service");
-const student_validation_1 = __importDefault(require("./student.validation"));
-const createStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { student } = req.body;
-        const { error, value } = student_validation_1.default.validate(student);
-        // will call service func to send this data
-        const result = yield student_service_1.StudentServices.createStudentIntoDB(value);
-        if (error) {
-            res.status(500).json({
-                success: false,
-                message: 'Someting went wrong',
-                error: error.details,
-            });
-        }
-        // send response
-        res.status(200).json({
-            success: true,
-            message: 'Student is created succesfully',
-            data: result,
-        });
-    }
-    catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message || 'Someting went wrong',
-            error,
-        });
-    }
-});
-const getAllStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
+const getAllStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // will call service func to send this data
         const result = yield student_service_1.StudentServices.getAllStudentFromDB();
         // send response
-        res.status(200).json({
+        (0, sendResponse_1.default)(res, {
             success: true,
+            statusCode: 200,
             message: 'Students get succesfully',
             data: result,
         });
     }
     catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Someting went wrong',
-            error,
-        });
+        next(error);
     }
 });
-const getStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
         // will call service func to send this data
         const result = yield student_service_1.StudentServices.getStudentFromDB(id);
         // send response
-        res.status(200).json({
+        (0, sendResponse_1.default)(res, {
             success: true,
+            statusCode: 200,
             message: 'Student get succesfully',
             data: result,
         });
     }
     catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Someting went wrong',
-            error,
-        });
+        next(error);
     }
 });
 // student delete
-const deleteStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
         // will call service func to send this data
         const result = yield student_service_1.StudentServices.deleteStudentFromDB(id);
         // send response
-        res.status(200).json({
+        (0, sendResponse_1.default)(res, {
             success: true,
+            statusCode: 200,
             message: 'Student deleted succesful',
             data: result,
         });
     }
     catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Someting went wrong',
-            error,
-        });
+        next(error);
     }
 });
 exports.studentController = {
-    createStudent,
     getAllStudent,
     getStudent,
     deleteStudent,

@@ -8,7 +8,6 @@ const express_1 = __importDefault(require("express"));
 const student_controller_1 = require("./student.controller");
 const router = express_1.default.Router();
 // will call controller function
-router.post('/create-student', student_controller_1.studentController.createStudent);
 router.get('/get-students', student_controller_1.studentController.getAllStudent);
 router.get('/:id', student_controller_1.studentController.getStudent);
 router.delete('/:id', student_controller_1.studentController.deleteStudent);

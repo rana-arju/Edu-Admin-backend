@@ -14,9 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Student = void 0;
 const mongoose_1 = require("mongoose");
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const validator_1 = __importDefault(require("validator"));
-const config_1 = __importDefault(require("../../config"));
 function capitalize(value) {
     return value
         .split(' ')
@@ -91,7 +89,12 @@ const studentSchema = new mongoose_1.Schema({
         type: String,
         required: [true, 'Student ID is required.'],
     },
-    password: String,
+    user: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        required: [true, 'User ID is required.'],
+        unique: true,
+        ref: 'User',
+    },
     name: {
         type: userNameSchema,
         required: [true, 'Name field is required.'],
@@ -146,11 +149,6 @@ const studentSchema = new mongoose_1.Schema({
         type: localSchema,
         required: [true, 'Local guardian information is required.'],
     },
-    isActive: {
-        type: String,
-        enum: ['active', 'inactive'],
-        default: 'active',
-    },
     isDeleted: {
         type: Boolean,
         default: false,
@@ -173,18 +171,6 @@ userNameSchema.pre('save', function (next) {
     }
     next();
 });
-studentSchema.pre('save', function (next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const user = this;
-        user.password = yield bcrypt_1.default.hash(user.password, Number(config_1.default.salt_rounds));
-        next();
-    });
-});
-studentSchema.post('save', function (doc, next) {
-    doc.password = '';
-    next();
-});
 // Query middleware
 studentSchema.pre('find', function (next) {
     this.find({ isDeleted: { $ne: true } });
@@ -198,13 +184,6 @@ studentSchema.pre('aggregate', function (next) {
     this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
     next();
 });
-// creating a custom instance method
-/* studentSchema.methods.isUserExists = async function (id:string) {
-  const existingUser = await Student.findOne({id})
-  return existingUser
-  
-}
-  */
 // creating a custom method
 studentSchema.statics.isUserExists = function (id) {
     return __awaiter(this, void 0, void 0, function* () {

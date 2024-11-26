@@ -1,107 +1,48 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const joi_1 = __importDefault(require("joi"));
-const userNameValidationSchema = joi_1.default.object({
-    firstName: joi_1.default.string().trim().required().messages({
-        'string.empty': 'First name is required.',
-        'any.required': 'First name is required.',
+exports.studentValidationSchema = void 0;
+const zod_1 = require("zod");
+const userNameSchema = zod_1.z.object({
+    firstName: zod_1.z
+        .string()
+        .min(1)
+        .max(20)
+        .refine((value) => /^[A-Z]/.test(value), {
+        message: 'First Name must start with a capital letter',
     }),
-    lastName: joi_1.default.string().trim().required().messages({
-        'string.empty': 'Last name is required.',
-        'any.required': 'Last name is required.',
-    }),
-    middleName: joi_1.default.string().trim().optional(),
+    middleName: zod_1.z.string(),
+    lastName: zod_1.z.string(),
 });
-const guardianValidationSchema = joi_1.default.object({
-    fatherName: joi_1.default.string().trim().required().messages({
-        'string.empty': "Father's name is required.",
-        'any.required': "Father's name is required.",
-    }),
-    fatherOccupation: joi_1.default.string().trim().required().messages({
-        'string.empty': "Father's occupation is required.",
-        'any.required': "Father's occupation is required.",
-    }),
-    fatherContactNo: joi_1.default.string().optional(),
-    motherName: joi_1.default.string().trim().required().messages({
-        'string.empty': "Mother's name is required.",
-        'any.required': "Mother's name is required.",
-    }),
-    motherOccupation: joi_1.default.string().trim().required().messages({
-        'string.empty': "Mother's occupation is required.",
-        'any.required': "Mother's occupation is required.",
-    }),
-    motherContact: joi_1.default.string().optional(),
+const guardianSchema = zod_1.z.object({
+    fatherName: zod_1.z.string(),
+    fatherOccupation: zod_1.z.string(),
+    fatherContactNo: zod_1.z.string(),
+    motherName: zod_1.z.string(),
+    motherOccupation: zod_1.z.string(),
+    motherContactNo: zod_1.z.string(),
 });
-const localGuardianValidationSchema = joi_1.default.object({
-    name: joi_1.default.string().trim().required().messages({
-        'string.empty': "Local guardian's name is required.",
-        'any.required': "Local guardian's name is required.",
-    }),
-    occupation: joi_1.default.string().optional(),
-    contactNo: joi_1.default.string().optional(),
-    address: joi_1.default.string().trim().required().messages({
-        'string.empty': "Local guardian's address is required.",
-        'any.required': "Local guardian's address is required.",
-    }),
+const localGuardianSchema = zod_1.z.object({
+    name: zod_1.z.string(),
+    occupation: zod_1.z.string(),
+    contactNo: zod_1.z.string(),
+    address: zod_1.z.string(),
 });
-const studentValidationSchema = joi_1.default.object({
-    id: joi_1.default.string().required().messages({
-        'string.empty': 'Student ID is required.',
-        'any.required': 'Student ID is required.',
-    }),
-    password: joi_1.default.string().min(8).required().label('Password'),
-    name: userNameValidationSchema.required().messages({
-        'any.required': 'Name field is required.',
-    }),
-    profileImg: joi_1.default.string().uri().optional(),
-    email: joi_1.default.string().email().required().messages({
-        'string.email': 'Email address must be valid.',
-        'string.empty': 'Email address is required.',
-        'any.required': 'Email address is required.',
-    }),
-    gender: joi_1.default.string().valid('male', 'female', 'other').required().messages({
-        'any.only': 'Gender must be one of [male, female, other].',
-        'any.required': 'Gender is required.',
-    }),
-    dateOfBirth: joi_1.default.string().isoDate().optional(),
-    contactNo: joi_1.default.string().required().messages({
-        'string.empty': 'Contact number is required.',
-        'any.required': 'Contact number is required.',
-    }),
-    emergencyContactNo: joi_1.default.string().required().messages({
-        'string.empty': 'Emergency contact number is required.',
-        'any.required': 'Emergency contact number is required.',
-    }),
-    blood: joi_1.default.string()
-        .valid('A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-')
-        .required()
-        .messages({
-        'any.only': 'Blood group must be one of [A+, A-, B+, B-, O+, O-, AB+, AB-].',
-        'any.required': 'Blood group is required.',
-    }),
-    presentAddress: joi_1.default.string().trim().required().messages({
-        'string.empty': 'Present address is required.',
-        'any.required': 'Present address is required.',
-    }),
-    parmanentAddress: joi_1.default.string().trim().required().messages({
-        'string.empty': 'Permanent address is required.',
-        'any.required': 'Permanent address is required.',
-    }),
-    guardian: guardianValidationSchema.required().messages({
-        'any.required': 'Guardian information is required.',
-    }),
-    localGuardian: localGuardianValidationSchema.required().messages({
-        'any.required': 'Local guardian information is required.',
-    }),
-    isActive: joi_1.default.string()
-        .valid('active', 'inactive')
-        .default('active')
-        .messages({
-        'any.only': 'isActive must be one of [active, inactive].',
-    }),
-    isDeleted: joi_1.default.boolean(),
+exports.studentValidationSchema = zod_1.z.object({
+    id: zod_1.z.string(),
+    password: zod_1.z.string().max(20),
+    name: userNameSchema,
+    gender: zod_1.z.enum(['male', 'female', 'other']),
+    dateOfBirth: zod_1.z.string(),
+    email: zod_1.z.string().email(),
+    contactNo: zod_1.z.string(),
+    emergencyContactNo: zod_1.z.string(),
+    bloogGroup: zod_1.z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
+    presentAddress: zod_1.z.string(),
+    parmanentAddress: zod_1.z.string(),
+    guardian: guardianSchema,
+    localGuardian: localGuardianSchema,
+    profileImg: zod_1.z.string(),
+    isActive: zod_1.z.enum(['active', 'blocked']).default('active'),
+    isDeleted: zod_1.z.boolean().optional(),
 });
-exports.default = studentValidationSchema;
+exports.default = exports.studentValidationSchema;
