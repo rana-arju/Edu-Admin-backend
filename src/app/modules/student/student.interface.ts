@@ -33,7 +33,7 @@ export type TStudent = {
   profileImg?: string;
   email: string;
   gender: 'male' | 'female' | 'other';
-  dateOfBirth: string;
+  dateOfBirth: Date;
   contactNo: string;
   emergencyContactNo: string;
   blood?: 'A+' | 'A-' | 'B+' | 'B-' | 'O+' | 'O-' | 'AB+' | 'AB-';
