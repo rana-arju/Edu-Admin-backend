@@ -1,75 +1,57 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextFunction, Request, Response } from 'express';
+
 import { StudentServices } from './student.service';
 import sendResponse from '../../utils/sendResponse';
+import catchAsync from '../../utils/catchAsync';
 
-const getAllStudent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    // will call service func to send this data
-    const result = await StudentServices.getAllStudentFromDB();
 
-    // send response
 
-    sendResponse(res, {
-      success: true,
-      statusCode: 200,
-      message: 'Students get succesfully',
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+const getAllStudent = catchAsync(async (req, res) => {
+  // will call service func to send this data
+  const result = await StudentServices.getAllStudentFromDB();
 
-const getStudent = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const id = req.params.id;
+  // send response
 
-    // will call service func to send this data
-    const result = await StudentServices.getStudentFromDB(id);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Students get succesfully',
+    data: result,
+  });
+});
 
-    // send response
+const getStudent = catchAsync(async (req, res) => {
+  const id = req.params.id;
 
-    sendResponse(res, {
-      success: true,
-      statusCode: 200,
-      message: 'Student get succesfully',
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  // will call service func to send this data
+  const result = await StudentServices.getStudentFromDB(id);
+
+  // send response
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Student get succesfully',
+    data: result,
+  });
+});
 
 // student delete
 
-const deleteStudent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const id = req.params.id;
+const deleteStudent = catchAsync(async (req, res) => {
+  const id = req.params.id;
 
-    // will call service func to send this data
-    const result = await StudentServices.deleteStudentFromDB(id);
+  // will call service func to send this data
+  const result = await StudentServices.deleteStudentFromDB(id);
 
-    // send response
+  // send response
 
-    sendResponse(res, {
-      success: true,
-      statusCode: 200,
-      message: 'Student deleted succesful',
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Student deleted succesful',
+    data: result,
+  });
+});
 
 export const studentController = {
   getAllStudent,
