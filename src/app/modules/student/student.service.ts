@@ -5,7 +5,7 @@ const getAllStudentFromDB = async () => {
     .populate('user')
     .populate('admissionSemester')
     .populate({
-      path: 'AcademicDepartment',
+      path: 'academicDepartment',
       populate: {
         path: 'academicFaculty',
       },
@@ -17,7 +17,7 @@ const getStudentFromDB = async (id: string) => {
     .populate('user')
     .populate('admissionSemester')
     .populate({
-      path: 'AcademicDepartment',
+      path: 'academicDepartment',
       populate: {
         path: 'academicFaculty',
       },

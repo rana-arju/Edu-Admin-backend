@@ -3,7 +3,7 @@ import { IAcademicFaculty } from './academicFaculty.interface';
 
 const academicFacultyModel = new Schema<IAcademicFaculty>(
   {
-    name: { type: String, unique: true, required: true },
+    name: { type: String, required: true },
   },
   { timestamps: true },
 );
