@@ -40,6 +40,7 @@ export type TStudent = {
   presentAddress: string;
   parmanentAddress: string;
   admissionSemester: Types.ObjectId;
+  academicDepartment: Types.ObjectId;
   guardian: TGuardian;
   localGuardian: TLocalGuardian;
   isDeleted?: boolean;
@@ -48,6 +49,7 @@ export type TStudent = {
 // for static
 
 export interface StudentModel extends Model<TStudent> {
+  // eslint-disable-next-line no-unused-vars
   isUserExists(id:string): Promise<TStudent | null>;
 }
 
