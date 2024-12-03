@@ -15,57 +15,43 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.studentController = void 0;
 const student_service_1 = require("./student.service");
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
-const getAllStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // will call service func to send this data
-        const result = yield student_service_1.StudentServices.getAllStudentFromDB();
-        // send response
-        (0, sendResponse_1.default)(res, {
-            success: true,
-            statusCode: 200,
-            message: 'Students get succesfully',
-            data: result,
-        });
-    }
-    catch (error) {
-        next(error);
-    }
-});
-const getStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const id = req.params.id;
-        // will call service func to send this data
-        const result = yield student_service_1.StudentServices.getStudentFromDB(id);
-        // send response
-        (0, sendResponse_1.default)(res, {
-            success: true,
-            statusCode: 200,
-            message: 'Student get succesfully',
-            data: result,
-        });
-    }
-    catch (error) {
-        next(error);
-    }
-});
+const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
+const getAllStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // will call service func to send this data
+    const result = yield student_service_1.StudentServices.getAllStudentFromDB();
+    // send response
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: 200,
+        message: 'Students get succesfully',
+        data: result,
+    });
+}));
+const getStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    // will call service func to send this data
+    const result = yield student_service_1.StudentServices.getStudentFromDB(id);
+    // send response
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: 200,
+        message: 'Student get succesfully',
+        data: result,
+    });
+}));
 // student delete
-const deleteStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const id = req.params.id;
-        // will call service func to send this data
-        const result = yield student_service_1.StudentServices.deleteStudentFromDB(id);
-        // send response
-        (0, sendResponse_1.default)(res, {
-            success: true,
-            statusCode: 200,
-            message: 'Student deleted succesful',
-            data: result,
-        });
-    }
-    catch (error) {
-        next(error);
-    }
-});
+const deleteStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    // will call service func to send this data
+    const result = yield student_service_1.StudentServices.deleteStudentFromDB(id);
+    // send response
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: 200,
+        message: 'Student deleted succesful',
+        data: result,
+    });
+}));
 exports.studentController = {
     getAllStudent,
     getStudent,

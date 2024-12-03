@@ -15,24 +15,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
 const user_service_1 = require("./user.service");
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
-const createStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { password, student: studentData } = req.body;
-        //const zodParsedData = userSchemaValidation.parse(studentData);
-        // will call service func to send this data
-        const result = yield user_service_1.UserServices.createUserIntoDB(password, studentData);
-        // send response
-        (0, sendResponse_1.default)(res, {
-            success: true,
-            statusCode: 201,
-            message: 'Student Create successful',
-            data: result,
-        });
-    }
-    catch (error) {
-        next(error);
-    }
-});
+const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
+const createStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { password, student: studentData } = req.body;
+    //const zodParsedData = userSchemaValidation.parse(studentData);
+    // will call service func to send this data
+    const result = yield user_service_1.UserServices.createUserIntoDB(password, studentData);
+    // send response
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: 201,
+        message: 'Student Create successful',
+        data: result,
+    });
+}));
 exports.userController = {
     createStudent,
 };

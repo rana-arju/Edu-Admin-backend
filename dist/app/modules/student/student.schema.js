@@ -88,6 +88,7 @@ const studentSchema = new mongoose_1.Schema({
     id: {
         type: String,
         required: [true, 'Student ID is required.'],
+        unique: true
     },
     user: {
         type: mongoose_1.Schema.Types.ObjectId,
@@ -116,7 +117,7 @@ const studentSchema = new mongoose_1.Schema({
         required: [true, 'Gender is required.'],
     },
     dateOfBirth: {
-        type: String,
+        type: Date,
     },
     contactNo: {
         type: String,
@@ -148,6 +149,10 @@ const studentSchema = new mongoose_1.Schema({
     localGuardian: {
         type: localSchema,
         required: [true, 'Local guardian information is required.'],
+    },
+    admissionSemester: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'AcademicSemester',
     },
     isDeleted: {
         type: Boolean,

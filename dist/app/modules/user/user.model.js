@@ -17,7 +17,7 @@ const mongoose_1 = require("mongoose");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const config_1 = __importDefault(require("../../config"));
 const userModel = new mongoose_1.Schema({
-    id: { type: String },
+    id: { type: String, unique: true },
     password: { type: String, required: true },
     needsPasswordChange: { type: Boolean, default: true },
     status: {

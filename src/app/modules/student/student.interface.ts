@@ -39,6 +39,7 @@ export type TStudent = {
   blood?: 'A+' | 'A-' | 'B+' | 'B-' | 'O+' | 'O-' | 'AB+' | 'AB-';
   presentAddress: string;
   parmanentAddress: string;
+  admissionSemester: Types.ObjectId;
   guardian: TGuardian;
   localGuardian: TLocalGuardian;
   isDeleted?: boolean;

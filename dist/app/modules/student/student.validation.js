@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.studentValidationSchema = void 0;
+exports.studentValidations = exports.createStudentValidationSchema = void 0;
 const zod_1 = require("zod");
-const userNameSchema = zod_1.z.object({
+const userNameValidationSchema = zod_1.z.object({
     firstName: zod_1.z
         .string()
         .min(1)
@@ -13,7 +13,7 @@ const userNameSchema = zod_1.z.object({
     middleName: zod_1.z.string(),
     lastName: zod_1.z.string(),
 });
-const guardianSchema = zod_1.z.object({
+const guardianValidationSchema = zod_1.z.object({
     fatherName: zod_1.z.string(),
     fatherOccupation: zod_1.z.string(),
     fatherContactNo: zod_1.z.string(),
@@ -21,28 +21,32 @@ const guardianSchema = zod_1.z.object({
     motherOccupation: zod_1.z.string(),
     motherContactNo: zod_1.z.string(),
 });
-const localGuardianSchema = zod_1.z.object({
+const localValidationGuardianSchema = zod_1.z.object({
     name: zod_1.z.string(),
     occupation: zod_1.z.string(),
     contactNo: zod_1.z.string(),
     address: zod_1.z.string(),
 });
-exports.studentValidationSchema = zod_1.z.object({
-    id: zod_1.z.string(),
-    password: zod_1.z.string().max(20),
-    name: userNameSchema,
-    gender: zod_1.z.enum(['male', 'female', 'other']),
-    dateOfBirth: zod_1.z.string(),
-    email: zod_1.z.string().email(),
-    contactNo: zod_1.z.string(),
-    emergencyContactNo: zod_1.z.string(),
-    bloogGroup: zod_1.z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
-    presentAddress: zod_1.z.string(),
-    parmanentAddress: zod_1.z.string(),
-    guardian: guardianSchema,
-    localGuardian: localGuardianSchema,
-    profileImg: zod_1.z.string(),
-    isActive: zod_1.z.enum(['active', 'blocked']).default('active'),
-    isDeleted: zod_1.z.boolean().optional(),
+exports.createStudentValidationSchema = zod_1.z.object({
+    body: zod_1.z.object({
+        password: zod_1.z.string().max(20),
+        student: zod_1.z.object({
+            name: userNameValidationSchema,
+            gender: zod_1.z.enum(['male', 'female', 'other']),
+            dateOfBirth: zod_1.z.string().optional(),
+            email: zod_1.z.string().email(),
+            contactNo: zod_1.z.string(),
+            emergencyContactNo: zod_1.z.string(),
+            bloogGroup: zod_1.z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
+            presentAddress: zod_1.z.string(),
+            parmanentAddress: zod_1.z.string(),
+            guardian: guardianValidationSchema,
+            localGuardian: localValidationGuardianSchema,
+            profileImg: zod_1.z.string(),
+            academicSemester: zod_1.z.string(),
+        }),
+    }),
 });
-exports.default = exports.studentValidationSchema;
+exports.studentValidations = {
+    createStudentValidationSchema: exports.createStudentValidationSchema,
+};
