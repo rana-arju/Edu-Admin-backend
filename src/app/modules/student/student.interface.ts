@@ -2,13 +2,13 @@ import { Model, Types } from 'mongoose';
 
 //name
 
-export type TUserName = {
+export type IUserName = {
   firstName: string;
   lastName: string;
   middleName?: string;
 };
 // Guardian
-export type TGuardian = {
+export type IGuardian = {
   fatherName: string;
   fatherOccupation?: string;
   fatherContactNo?: string;
@@ -19,17 +19,17 @@ export type TGuardian = {
 
 // Local Guardian
 
-export type TLocalGuardian = {
+export type ILocalGuardian = {
   name: string;
   occupation: string;
   contactNo?: string;
   address: string;
 };
 // Student
-export type TStudent = {
+export type IStudent = {
   id: string;
   user: Types.ObjectId;
-  name: TUserName;
+  name: IUserName;
   profileImg?: string;
   email: string;
   gender: 'male' | 'female' | 'other';
@@ -41,16 +41,16 @@ export type TStudent = {
   parmanentAddress: string;
   admissionSemester: Types.ObjectId;
   academicDepartment: Types.ObjectId;
-  guardian: TGuardian;
-  localGuardian: TLocalGuardian;
+  guardian: IGuardian;
+  localGuardian: ILocalGuardian;
   isDeleted?: boolean;
 };
 
 // for static
 
-export interface StudentModel extends Model<TStudent> {
+export interface StudentModel extends Model<IStudent> {
   // eslint-disable-next-line no-unused-vars
-  isUserExists(id:string): Promise<TStudent | null>;
+  isUserExists(id: string): Promise<IStudent | null>;
 }
 
 // for creating instance

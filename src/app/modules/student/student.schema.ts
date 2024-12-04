@@ -1,9 +1,9 @@
 import { Schema, model } from 'mongoose';
 import {
-  TGuardian,
-  TStudent,
-  TLocalGuardian,
-  TUserName,
+  IGuardian,
+  IStudent,
+  ILocalGuardian,
+  IUserName,
   StudentModel,
 } from './student.interface';
 import validator from 'validator';
@@ -15,7 +15,7 @@ function capitalize(value: string): string {
     .join(' ');
 }
 
-const userNameSchema = new Schema<TUserName>({
+const userNameSchema = new Schema<IUserName>({
   firstName: {
     type: String,
     trim: true,
@@ -32,7 +32,7 @@ const userNameSchema = new Schema<TUserName>({
   },
 });
 
-const guardianSchema = new Schema<TGuardian>({
+const guardianSchema = new Schema<IGuardian>({
   fatherName: {
     type: String,
     required: [true, "Father's name is required."],
@@ -61,7 +61,7 @@ const guardianSchema = new Schema<TGuardian>({
   },
 });
 
-const localSchema = new Schema<TLocalGuardian>({
+const localSchema = new Schema<ILocalGuardian>({
   name: {
     type: String,
     required: [true, "Local guardian's name is required."],
@@ -81,7 +81,7 @@ const localSchema = new Schema<TLocalGuardian>({
   },
 });
 
-const studentSchema = new Schema<TStudent, StudentModel>(
+const studentSchema = new Schema<IStudent, StudentModel>(
   {
     id: {
       type: String,
@@ -211,4 +211,4 @@ studentSchema.statics.isUserExists = async function (id: string) {
 };
 
 // Create the model
-export const Student = model<TStudent, StudentModel>('Student', studentSchema);
+export const Student = model<IStudent, StudentModel>('Student', studentSchema);
