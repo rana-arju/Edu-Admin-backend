@@ -12,27 +12,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AcademicSemester = void 0;
+exports.AcademicDepartment = void 0;
 const mongoose_1 = require("mongoose");
-const academicSemester_constant_1 = require("./academicSemester.constant");
 const AppError_1 = __importDefault(require("../../errors/AppError"));
-const academicSemesterSchema = new mongoose_1.Schema({
-    name: { type: String, enum: academicSemester_constant_1.AcademicSemesterName, required: true },
-    code: { type: String, enum: academicSemester_constant_1.AcademicSemesterCode, required: true },
-    year: { type: String, required: true },
-    startMonth: { type: String, enum: academicSemester_constant_1.Months },
-    endMonth: { type: String, enum: academicSemester_constant_1.Months },
+const academicDepartmentModel = new mongoose_1.Schema({
+    name: { type: String, unique: true, required: true },
+    academicFaculty: { type: mongoose_1.Schema.Types.ObjectId, ref: 'AcademicFaculty' },
 }, { timestamps: true });
-academicSemesterSchema.pre('save', function (next) {
+academicDepartmentModel.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const isSemesterExists = yield exports.AcademicSemester.findOne({
+        const isDepartmentExist = yield exports.AcademicDepartment.findOne({
             name: this.name,
-            year: this.year,
         });
-        if (isSemesterExists) {
-            throw new AppError_1.default(404, 'Semester is already exists!');
+        if (isDepartmentExist) {
+            throw new AppError_1.default(500, 'This Department Already exist');
         }
         next();
     });
 });
-exports.AcademicSemester = (0, mongoose_1.model)('AcademicSemester', academicSemesterSchema);
+academicDepartmentModel.pre('findOneAndUpdate', function (next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const query = this.getQuery();
+        const isDepartmentExist = yield exports.AcademicDepartment.findOne(query);
+        if (!isDepartmentExist) {
+            throw new AppError_1.default(404, 'This Department does not exist');
+        }
+        next();
+    });
+});
+exports.AcademicDepartment = (0, mongoose_1.model)('AcademicDepartment', academicDepartmentModel);

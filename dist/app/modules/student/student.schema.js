@@ -88,7 +88,7 @@ const studentSchema = new mongoose_1.Schema({
     id: {
         type: String,
         required: [true, 'Student ID is required.'],
-        unique: true
+        unique: true,
     },
     user: {
         type: mongoose_1.Schema.Types.ObjectId,
@@ -153,6 +153,10 @@ const studentSchema = new mongoose_1.Schema({
     admissionSemester: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'AcademicSemester',
+    },
+    academicDepartment: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'AcademicDepartment',
     },
     isDeleted: {
         type: Boolean,
