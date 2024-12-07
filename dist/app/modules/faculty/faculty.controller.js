@@ -13,13 +13,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.studentController = void 0;
-const student_service_1 = require("./student.service");
+const faculty_service_1 = require("./faculty.service");
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const getAllStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // will call service func to send this data
     const searchTerm = req.query;
-    const result = yield student_service_1.StudentServices.getAllStudentFromDB(searchTerm);
+    const result = yield faculty_service_1.StudentServices.getAllStudentFromDB(searchTerm);
     // send response
     (0, sendResponse_1.default)(res, {
         success: true,
@@ -31,7 +31,7 @@ const getAllStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
 const getStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     // will call service func to send this data
-    const result = yield student_service_1.StudentServices.getStudentFromDB(id);
+    const result = yield faculty_service_1.StudentServices.getStudentFromDB(id);
     // send response
     (0, sendResponse_1.default)(res, {
         success: true,
@@ -44,7 +44,7 @@ const getStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
 const deleteStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     // will call service func to send this data
-    const result = yield student_service_1.StudentServices.deleteStudentFromDB(id);
+    const result = yield faculty_service_1.StudentServices.deleteStudentFromDB(id);
     // send response
     (0, sendResponse_1.default)(res, {
         success: true,
@@ -58,7 +58,7 @@ const updateStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     const id = req.params.id;
     const { student } = req.body;
     // will call service func to send this data
-    const result = yield student_service_1.StudentServices.updateStudentFromDB(id, student);
+    const result = yield faculty_service_1.StudentServices.updateStudentFromDB(id, student);
     // send response
     (0, sendResponse_1.default)(res, {
         success: true,

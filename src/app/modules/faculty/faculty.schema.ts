@@ -5,7 +5,7 @@ import {
   ILocalGuardian,
   IUserName,
   StudentModel,
-} from './student.interface';
+} from './faculty.interface';
 import validator from 'validator';
 
 function capitalize(value: string): string {
@@ -166,7 +166,7 @@ const studentSchema = new Schema<IStudent, StudentModel>(
 
 // Virtual
 
- studentSchema.virtual('fullName').get(function () {
+studentSchema.virtual('fullName').get(function () {
   return `${this?.name?.firstName}  ${this?.name?.lastName}`;
 });
 

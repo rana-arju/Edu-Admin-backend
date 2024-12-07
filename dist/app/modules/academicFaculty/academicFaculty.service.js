@@ -17,7 +17,7 @@ const createAcademicFacultyIntoDb = (payload) => __awaiter(void 0, void 0, void 
 });
 // Get single semester
 const getSingleAcademicFacultiesFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield academicFaculty_model_1.AcademicFaculty.findOne({ _id: id });
+    const result = yield academicFaculty_model_1.AcademicFaculty.findById(id);
     return result;
 });
 // Get all semester

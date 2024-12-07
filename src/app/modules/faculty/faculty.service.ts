@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
-import { Student } from './student.schema';
+import { Student } from './faculty.schema';
 import AppError from '../../errors/AppError';
 import { User } from '../user/user.model';
-import { IStudent } from './student.interface';
+import { IStudent } from './faculty.interface';
 import QueryBuilder from '../../builder/QueryBuilder';
-import { studentSearchableField } from './student.constant';
+import { studentSearchableField } from './faculty.constant';
 
 const getAllStudentFromDB = async (query: Record<string, unknown>) => {
   /*
@@ -66,14 +66,18 @@ const getAllStudentFromDB = async (query: Record<string, unknown>) => {
   return fieldsQuery;
   */
 
-  const studentQuery = new QueryBuilder(Student.find().populate('user')
-    .populate('admissionSemester')
-    .populate({
-      path: 'academicDepartment',
-      populate: {
-        path: 'academicFaculty',
-      },
-    }), query)
+  const studentQuery = new QueryBuilder(
+    Student.find()
+      .populate('user')
+      .populate('admissionSemester')
+      .populate({
+        path: 'academicDepartment',
+        populate: {
+          path: 'academicFaculty',
+        },
+      }),
+    query,
+  )
     .search(studentSearchableField)
     .filter()
     .sort()
@@ -83,7 +87,7 @@ const getAllStudentFromDB = async (query: Record<string, unknown>) => {
   return result;
 };
 const getStudentFromDB = async (id: string) => {
-  const result = await Student.findById( id )
+  const result = await Student.findById(id)
     .populate('user')
     .populate('admissionSemester')
     .populate({
@@ -117,7 +121,7 @@ const updateStudentFromDB = async (id: string, payload: Partial<IStudent>) => {
     }
   }
 
-  const result = await Student.findByIdAndUpdate( id , modifiedUpdatedData, {
+  const result = await Student.findByIdAndUpdate(id, modifiedUpdatedData, {
     new: true,
     runValidators: true,
   });

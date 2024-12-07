@@ -25,11 +25,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StudentServices = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
-const student_schema_1 = require("./student.schema");
+const faculty_schema_1 = require("./faculty.schema");
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const user_model_1 = require("../user/user.model");
 const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
-const student_constant_1 = require("./student.constant");
+const faculty_constant_1 = require("./faculty.constant");
 const getAllStudentFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
     /*
     let searchTerm = '';
@@ -89,7 +89,8 @@ const getAllStudentFromDB = (query) => __awaiter(void 0, void 0, void 0, functio
   
     return fieldsQuery;
     */
-    const studentQuery = new QueryBuilder_1.default(student_schema_1.Student.find().populate('user')
+    const studentQuery = new QueryBuilder_1.default(faculty_schema_1.Student.find()
+        .populate('user')
         .populate('admissionSemester')
         .populate({
         path: 'academicDepartment',
@@ -97,7 +98,7 @@ const getAllStudentFromDB = (query) => __awaiter(void 0, void 0, void 0, functio
             path: 'academicFaculty',
         },
     }), query)
-        .search(student_constant_1.studentSearchableField)
+        .search(faculty_constant_1.studentSearchableField)
         .filter()
         .sort()
         .paginate()
@@ -106,7 +107,7 @@ const getAllStudentFromDB = (query) => __awaiter(void 0, void 0, void 0, functio
     return result;
 });
 const getStudentFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield student_schema_1.Student.findById(id)
+    const result = yield faculty_schema_1.Student.findById(id)
         .populate('user')
         .populate('admissionSemester')
         .populate({
@@ -135,7 +136,7 @@ const updateStudentFromDB = (id, payload) => __awaiter(void 0, void 0, void 0, f
             modifiedUpdatedData[`localGuardian.${key}`] = value;
         }
     }
-    const result = yield student_schema_1.Student.findByIdAndUpdate(id, modifiedUpdatedData, {
+    const result = yield faculty_schema_1.Student.findByIdAndUpdate(id, modifiedUpdatedData, {
         new: true,
         runValidators: true,
     });
@@ -145,7 +146,7 @@ const deleteStudentFromDB = (id) => __awaiter(void 0, void 0, void 0, function* 
     const session = yield mongoose_1.default.startSession();
     try {
         session.startTransaction();
-        const deletedStudent = yield student_schema_1.Student.findOneAndUpdate({ id }, { isDeleted: true }, { new: true, session });
+        const deletedStudent = yield faculty_schema_1.Student.findOneAndUpdate({ id }, { isDeleted: true }, { new: true, session });
         if (!deletedStudent) {
             throw new AppError_1.default(400, 'Failed to delete student!');
         }

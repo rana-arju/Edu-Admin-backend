@@ -8,7 +8,7 @@ const createAcademicFacultyIntoDb = async (payload: IAcademicFaculty) => {
 
 // Get single semester
 const getSingleAcademicFacultiesFromDB = async (id: string) => {
-  const result = await AcademicFaculty.findOne({ _id: id });
+  const result = await AcademicFaculty.findById(id);
   return result;
 };
 // Get all semester
