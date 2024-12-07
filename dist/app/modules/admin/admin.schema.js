@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Faculty = void 0;
+exports.Admin = void 0;
 const mongoose_1 = require("mongoose");
-const faculty_constant_1 = require("./faculty.constant");
+const admin_constant_1 = require("./admin.constant");
 const userNameSchema = new mongoose_1.Schema({
     firstName: {
         type: String,
@@ -30,7 +30,7 @@ const userNameSchema = new mongoose_1.Schema({
         maxlength: [20, 'Name can not be more than 20 characters'],
     },
 });
-const facultySchema = new mongoose_1.Schema({
+const adminSchema = new mongoose_1.Schema({
     id: {
         type: String,
         required: [true, 'ID is required'],
@@ -53,12 +53,12 @@ const facultySchema = new mongoose_1.Schema({
     gender: {
         type: String,
         enum: {
-            values: faculty_constant_1.Gender,
+            values: admin_constant_1.Gender,
             message: '{VALUE} is not a valid gender',
         },
         required: [true, 'Gender is required'],
     },
-    dateOfBirth: { type: String },
+    dateOfBirth: { type: Date },
     email: {
         type: String,
         required: [true, 'Email is required'],
@@ -72,7 +72,7 @@ const facultySchema = new mongoose_1.Schema({
     blood: {
         type: String,
         enum: {
-            values: faculty_constant_1.BloodGroup,
+            values: admin_constant_1.BloodGroup,
             message: '{VALUE} is not a valid blood group',
         },
     },
@@ -85,11 +85,6 @@ const facultySchema = new mongoose_1.Schema({
         required: [true, 'Permanent address is required'],
     },
     profileImg: { type: String },
-    academicDepartment: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        required: [true, 'User id is required'],
-        ref: 'User',
-    },
     isDeleted: {
         type: Boolean,
         default: false,
@@ -100,7 +95,7 @@ const facultySchema = new mongoose_1.Schema({
     },
 });
 // generating full name
-facultySchema.virtual('fullName').get(function () {
+adminSchema.virtual('fullName').get(function () {
     var _a, _b, _c;
     return (((_a = this === null || this === void 0 ? void 0 : this.name) === null || _a === void 0 ? void 0 : _a.firstName) +
         '' +
@@ -109,23 +104,23 @@ facultySchema.virtual('fullName').get(function () {
         ((_c = this === null || this === void 0 ? void 0 : this.name) === null || _c === void 0 ? void 0 : _c.lastName));
 });
 // filter out deleted documents
-facultySchema.pre('find', function (next) {
+adminSchema.pre('find', function (next) {
     this.find({ isDeleted: { $ne: true } });
     next();
 });
-facultySchema.pre('findOne', function (next) {
+adminSchema.pre('findOne', function (next) {
     this.find({ isDeleted: { $ne: true } });
     next();
 });
-facultySchema.pre('aggregate', function (next) {
+adminSchema.pre('aggregate', function (next) {
     this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
     next();
 });
 //checking if user is already exist!
-facultySchema.statics.isUserExists = function (id) {
+adminSchema.statics.isUserExists = function (id) {
     return __awaiter(this, void 0, void 0, function* () {
-        const existingUser = yield exports.Faculty.findOne({ id });
+        const existingUser = yield exports.Admin.findOne({ id });
         return existingUser;
     });
 };
-exports.Faculty = (0, mongoose_1.model)('Faculty', facultySchema);
+exports.Admin = (0, mongoose_1.model)('Admin', adminSchema);

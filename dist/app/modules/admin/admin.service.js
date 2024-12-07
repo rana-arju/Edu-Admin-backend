@@ -23,59 +23,59 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FacultyServices = void 0;
+exports.AdminServices = void 0;
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const mongoose_1 = __importDefault(require("mongoose"));
 const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const user_model_1 = require("../user/user.model");
-const faculty_constant_1 = require("./faculty.constant");
-const faculty_schema_1 = require("./faculty.schema");
-const getAllFacultiesFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const facultyQuery = new QueryBuilder_1.default(faculty_schema_1.Faculty.find().populate('academicDepartment'), query)
-        .search(faculty_constant_1.FacultySearchableFields)
+const admin_constant_1 = require("./admin.constant");
+const admin_schema_1 = require("./admin.schema");
+const getAllAdminsFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    const adminQuery = new QueryBuilder_1.default(admin_schema_1.Admin.find(), query)
+        .search(admin_constant_1.AdminSearchableFields)
         .filter()
         .sort()
         .paginate()
         .fields();
-    const result = yield facultyQuery.modelQuery;
+    const result = yield adminQuery.modelQuery;
     return result;
 });
-const getSingleFacultyFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield faculty_schema_1.Faculty.findById(id).populate('academicDepartment');
+const getSingleAdminFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield admin_schema_1.Admin.findById(id);
     return result;
 });
-const updateFacultyIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name } = payload, remainingFacultyData = __rest(payload, ["name"]);
-    const modifiedUpdatedData = Object.assign({}, remainingFacultyData);
+const updateAdminIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name } = payload, remainingAdminData = __rest(payload, ["name"]);
+    const modifiedUpdatedData = Object.assign({}, remainingAdminData);
     if (name && Object.keys(name).length) {
         for (const [key, value] of Object.entries(name)) {
             modifiedUpdatedData[`name.${key}`] = value;
         }
     }
-    const result = yield faculty_schema_1.Faculty.findByIdAndUpdate(id, modifiedUpdatedData, {
+    const result = yield admin_schema_1.Admin.findByIdAndUpdate({ id }, modifiedUpdatedData, {
         new: true,
         runValidators: true,
     });
     return result;
 });
-const deleteFacultyFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteAdminFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const session = yield mongoose_1.default.startSession();
     try {
         session.startTransaction();
-        const deletedFaculty = yield faculty_schema_1.Faculty.findByIdAndUpdate(id, { isDeleted: true }, { new: true, session });
-        if (!deletedFaculty) {
-            throw new AppError_1.default(400, 'Failed to delete faculty');
+        const deletedAdmin = yield admin_schema_1.Admin.findByIdAndUpdate(id, { isDeleted: true }, { new: true, session });
+        if (!deletedAdmin) {
+            throw new AppError_1.default(200, 'Failed to delete student');
         }
-        // get user _id from deletedFaculty
-        const userId = deletedFaculty.user;
-        const deletedUser = yield user_model_1.User.findByIdAndUpdate(userId, { isDeleted: true }, { new: true, session });
+        // get user _id from deletedAdmin
+        const userId = deletedAdmin.user;
+        const deletedUser = yield user_model_1.User.findOneAndUpdate(userId, { isDeleted: true }, { new: true, session });
         if (!deletedUser) {
-            throw new AppError_1.default(400, 'Failed to delete user');
+            throw new AppError_1.default(200, 'Failed to delete user');
         }
         yield session.commitTransaction();
         yield session.endSession();
-        return deletedFaculty;
+        return deletedAdmin;
     }
     catch (err) {
         yield session.abortTransaction();
@@ -83,9 +83,9 @@ const deleteFacultyFromDB = (id) => __awaiter(void 0, void 0, void 0, function* 
         throw new Error(err);
     }
 });
-exports.FacultyServices = {
-    getAllFacultiesFromDB,
-    getSingleFacultyFromDB,
-    updateFacultyIntoDB,
-    deleteFacultyFromDB,
+exports.AdminServices = {
+    getAllAdminsFromDB,
+    getSingleAdminFromDB,
+    updateAdminIntoDB,
+    deleteAdminFromDB,
 };

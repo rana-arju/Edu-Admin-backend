@@ -12,53 +12,53 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FacultyControllers = void 0;
+exports.AdminControllers = void 0;
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
-const faculty_service_1 = require("./faculty.service");
-const getSingleFaculty = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const admin_service_1 = require("./admin.service");
+const getSingleAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const result = yield faculty_service_1.FacultyServices.getSingleFacultyFromDB(id);
+    const result = yield admin_service_1.AdminServices.getSingleAdminFromDB(id);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
-        message: 'Faculty is retrieved succesfully',
+        message: 'Admin is retrieved succesfully',
         data: result,
     });
 }));
-const getAllFaculties = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield faculty_service_1.FacultyServices.getAllFacultiesFromDB(req.query);
+const getAllAdmins = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield admin_service_1.AdminServices.getAllAdminsFromDB(req.query);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
-        message: 'Faculties are retrieved succesfully',
+        message: 'Admins are retrieved succesfully',
         data: result,
     });
 }));
-const updateFaculty = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const updateAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const { faculty } = req.body;
-    const result = yield faculty_service_1.FacultyServices.updateFacultyIntoDB(id, faculty);
+    const { admin } = req.body;
+    const result = yield admin_service_1.AdminServices.updateAdminIntoDB(id, admin);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
-        message: 'Faculty is updated succesfully',
+        message: 'Admin is updated succesfully',
         data: result,
     });
 }));
-const deleteFaculty = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const result = yield faculty_service_1.FacultyServices.deleteFacultyFromDB(id);
+    const result = yield admin_service_1.AdminServices.deleteAdminFromDB(id);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
-        message: 'Faculty is deleted succesfully',
+        message: 'Admin is deleted succesfully',
         data: result,
     });
 }));
-exports.FacultyControllers = {
-    getAllFaculties,
-    getSingleFaculty,
-    deleteFaculty,
-    updateFaculty,
+exports.AdminControllers = {
+    getAllAdmins,
+    getSingleAdmin,
+    deleteAdmin,
+    updateAdmin,
 };

@@ -166,7 +166,7 @@ const studentSchema = new Schema<IStudent, StudentModel>(
 
 // Virtual
 
- studentSchema.virtual('fullName').get(function () {
+studentSchema.virtual('fullName').get(function () {
   return `${this?.name?.firstName}  ${this?.name?.lastName}`;
 });
 

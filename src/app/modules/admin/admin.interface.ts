@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Model, Types } from 'mongoose';
 
 export type IGender = 'male' | 'female' | 'other';
@@ -18,13 +17,13 @@ export type IUserName = {
   lastName: string;
 };
 
-export type IFaculty = {
+export type IAdmin = {
   id: string;
   user: Types.ObjectId;
   designation: string;
   name: IUserName;
   gender: IGender;
-  dateOfBirth?: string;
+  dateOfBirth?: Date;
   email: string;
   contactNo: string;
   emergencyContactNo: string;
@@ -32,10 +31,10 @@ export type IFaculty = {
   presentAddress: string;
   permanentAddress: string;
   profileImg?: string;
-  academicDepartment: Types.ObjectId;
   isDeleted: boolean;
 };
 
-export interface FacultyModel extends Model<IFaculty> {
-  isUserExists(id: string): Promise<IFaculty | null>;
+export interface AdminModel extends Model<IAdmin> {
+  // eslint-disable-next-line no-unused-vars
+  isUserExists(id: string): Promise<IAdmin | null>;
 }

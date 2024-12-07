@@ -1,80 +1,58 @@
-
-import { StudentServices } from './faculty.service';
-import sendResponse from '../../utils/sendResponse';
 import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
+import { FacultyServices } from './faculty.service';
 
-
-
-const getAllStudent = catchAsync(async (req, res) => {
-  // will call service func to send this data
-  const searchTerm  = req.query;
-  const result = await StudentServices.getAllStudentFromDB(searchTerm);
-
-  // send response
+const getSingleFaculty = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await FacultyServices.getSingleFacultyFromDB(id);
 
   sendResponse(res, {
-    success: true,
     statusCode: 200,
-    message: 'Students get succesfully',
+    success: true,
+    message: 'Faculty is retrieved succesfully',
     data: result,
   });
 });
 
-const getStudent = catchAsync(async (req, res) => {
-  const id = req.params.id;
-
-  // will call service func to send this data
-  const result = await StudentServices.getStudentFromDB(id);
-
-  // send response
+const getAllFaculties = catchAsync(async (req, res) => {
+  const result = await FacultyServices.getAllFacultiesFromDB(req.query);
 
   sendResponse(res, {
-    success: true,
     statusCode: 200,
-    message: 'Student get succesfully',
+    success: true,
+    message: 'Faculties are retrieved succesfully',
     data: result,
   });
 });
 
-// student delete
-
-const deleteStudent = catchAsync(async (req, res) => {
-  const id = req.params.id;
-
-  // will call service func to send this data
-  const result = await StudentServices.deleteStudentFromDB(id);
-
-  // send response
+const updateFaculty = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { faculty } = req.body;
+  const result = await FacultyServices.updateFacultyIntoDB(id, faculty);
 
   sendResponse(res, {
-    success: true,
     statusCode: 200,
-    message: 'Student deleted succesful',
-    data: result,
-  });
-});
-// student update
-
-const updateStudent = catchAsync(async (req, res) => {
-  const id = req.params.id;
-  const {student} = req.body
-
-  // will call service func to send this data
-  const result = await StudentServices.updateStudentFromDB(id, student);
-
-  // send response
-
-  sendResponse(res, {
     success: true,
-    statusCode: 200,
-    message: 'Student updated succesful',
+    message: 'Faculty is updated succesfully',
     data: result,
   });
 });
 
-export const studentController = {
-  getAllStudent,
-  getStudent,
-  deleteStudent,
-  updateStudent, 
+const deleteFaculty = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await FacultyServices.deleteFacultyFromDB(id);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Faculty is deleted succesfully',
+    data: result,
+  });
+});
+
+export const FacultyControllers = {
+  getAllFaculties,
+  getSingleFaculty,
+  deleteFaculty,
+  updateFaculty,
 };

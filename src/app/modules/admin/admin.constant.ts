@@ -1,4 +1,4 @@
-import { IBloodGroup, IGender } from './faculty.interface';
+import { IBloodGroup, IGender } from './admin.interface';
 
 export const Gender: IGender[] = ['male', 'female', 'other'];
 
@@ -13,7 +13,7 @@ export const BloodGroup: IBloodGroup[] = [
   'O-',
 ];
 
-export const FacultySearchableFields = [
+export const AdminSearchableFields = [
   'email',
   'id',
   'contactNo',
