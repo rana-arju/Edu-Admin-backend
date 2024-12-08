@@ -15,14 +15,8 @@ const moduleRoute = [
     { path: '/academic-semester', route: academicSemester_route_1.AcademicSemesterRoutes },
     { path: '/academic-faculty', route: academicFaculty_route_1.AcademicFacultyRoutes },
     { path: '/academic-department', route: academicDepartment_route_1.AcademicDepartmentRoutes },
-    {
-        path: '/faculties',
-        route: faculty_route_1.FacultyRoutes,
-    },
-    {
-        path: '/faculties',
-        route: course_route_1.CourseRouter,
-    },
+    { path: '/faculties', route: faculty_route_1.FacultyRoutes },
+    { path: '/courses', route: course_route_1.CourseRouter },
 ];
 moduleRoute.forEach((route) => router.use(route.path, route.route));
 exports.default = router;

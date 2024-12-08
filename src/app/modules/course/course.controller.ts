@@ -1,8 +1,11 @@
 import sendResponse from '../../utils/sendResponse';
 import catchAsync from '../../utils/catchAsync';
+import { courseServices } from './course.service';
 
 const createCourse = catchAsync(async (req, res) => {
   // will call service func to send this data
+
+  const result = await courseServices.createCourseIntoDb(req.body)
 
   // send response
 
@@ -10,7 +13,7 @@ const createCourse = catchAsync(async (req, res) => {
     success: true,
     statusCode: 200,
     message: 'Create course succesfully',
-    data: '',
+    data: result,
   });
 });
 
@@ -18,6 +21,7 @@ const getSingleCourse = catchAsync(async (req, res) => {
   const id = req.params.id;
 
   // will call service func to send this data
+  const result = await courseServices.getSingleCourseFromDB(id)
 
   // send response
 
@@ -25,24 +29,25 @@ const getSingleCourse = catchAsync(async (req, res) => {
     success: true,
     statusCode: 200,
     message: 'Course get succesfully',
-    data: '',
+    data: result,
   });
 });
 const getAllCourses = catchAsync(async (req, res) => {
+  const query = req.query
   // will call service func to send this data
-
+const result = await courseServices.getAllCourseFromDB(query)
   // send response
 
   sendResponse(res, {
     success: true,
     statusCode: 200,
     message: 'Courses get succesfully',
-    data: '',
+    data: result,
   });
 });
 const updateSingleCourse = catchAsync(async (req, res) => {
-  const id = req.params.id;
-  const payload = req.body;
+  //const id = req.params.id;
+  // const payload = req.body;
 
   // will call service func to send this data
 
@@ -62,14 +67,14 @@ const deleteCourse = catchAsync(async (req, res) => {
   const id = req.params.id;
 
   // will call service func to send this data
-
+const result = await courseServices.deleteSingleCourseFromDB(id)
   // send response
 
   sendResponse(res, {
     success: true,
     statusCode: 200,
     message: 'Course deleted succesful',
-    data: {},
+    data: result,
   });
 });
 

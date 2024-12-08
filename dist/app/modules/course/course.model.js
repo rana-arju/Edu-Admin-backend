@@ -5,6 +5,7 @@ const mongoose_1 = require("mongoose");
 const preRequisiteCourseSchema = new mongoose_1.Schema({
     course: {
         type: mongoose_1.Schema.Types.ObjectId,
+        ref: "Course"
     },
     isDeleted: {
         type: Boolean,
@@ -34,5 +35,9 @@ const courseModel = new mongoose_1.Schema({
         required: true,
     },
     preRequisiteCourses: [preRequisiteCourseSchema],
-});
+    isDeleted: {
+        type: Boolean,
+        default: false,
+    },
+}, { timestamps: true });
 exports.Course = (0, mongoose_1.model)('Course', courseModel);

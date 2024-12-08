@@ -15,40 +15,45 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.courseController = void 0;
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
+const course_service_1 = require("./course.service");
 const createCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // will call service func to send this data
+    const result = yield course_service_1.courseServices.createCourseIntoDb(req.body);
     // send response
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: 200,
         message: 'Create course succesfully',
-        data: '',
+        data: result,
     });
 }));
 const getSingleCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     // will call service func to send this data
+    const result = yield course_service_1.courseServices.getSingleCourseFromDB(id);
     // send response
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: 200,
         message: 'Course get succesfully',
-        data: '',
+        data: result,
     });
 }));
 const getAllCourses = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = req.query;
     // will call service func to send this data
+    const result = yield course_service_1.courseServices.getAllCourseFromDB(query);
     // send response
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: 200,
         message: 'Courses get succesfully',
-        data: '',
+        data: result,
     });
 }));
 const updateSingleCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = req.params.id;
-    const payload = req.body;
+    //const id = req.params.id;
+    // const payload = req.body;
     // will call service func to send this data
     // send response
     (0, sendResponse_1.default)(res, {
@@ -62,12 +67,13 @@ const updateSingleCourse = (0, catchAsync_1.default)((req, res) => __awaiter(voi
 const deleteCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     // will call service func to send this data
+    const result = yield course_service_1.courseServices.deleteSingleCourseFromDB(id);
     // send response
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: 200,
         message: 'Course deleted succesful',
-        data: {},
+        data: result,
     });
 }));
 exports.courseController = {

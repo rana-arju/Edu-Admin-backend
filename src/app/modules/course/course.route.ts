@@ -6,12 +6,12 @@ import { courseController } from './course.controller';
 const router = express.Router();
 
 router.get(
-  '/get-academic-department',
+  '/get-all-course',
   courseController.getAllCourses
 );
 
 router.post(
-  '/create-academic-department',
+  '/create-course',
   validationRequest(courseValidation.CreateCourseSchemaValidation),
 
   courseController.createCourse,

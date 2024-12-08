@@ -1,25 +1,32 @@
 import { z } from 'zod';
-
+const preRequisiteCourses = z.object({
+  course: z.string(),
+  isDeleted: z.boolean().optional()
+});
 const CreateCourseSchemaValidation = z.object({
   body: z.object({
-    name: z.string({
-      invalid_type_error: 'Academic department must be a string',
-      required_error: 'Department name is required',
+    title: z.string({
+      invalid_type_error: 'Course must be a string',
+      required_error: 'Course is required',
     }),
-    academicFaculty: z.string({
-      invalid_type_error: 'Academic Faculty id must be a string',
-      required_error: 'Academic Faculty Id Is Required',
-    }),
+    prefix: z.string(),
+    code: z.number(),
+    credits: z.number(),
+    isDeleted: z.boolean().optional(),
+    preRequisiteCourses: z.array(preRequisiteCourses).optional(),
   }),
 });
 const UpdateCoursetSchemaValidation = z.object({
   body: z.object({
-    name: z.string({
-      invalid_type_error: 'Academic department must be a string',
+    title: z.string({
+      invalid_type_error: 'Course must be a string',
+      required_error: 'Course is required',
     }),
-    academicFaculty: z.string({
-      invalid_type_error: 'Academic Faculty id must be a string',
-    }),
+    prefix: z.string(),
+    code: z.number(),
+    credits: z.number(),
+    isDeleted: z.boolean().optional(),
+    preRequisiteCourses: z.array(preRequisiteCourses).optional(),
   }),
 });
 

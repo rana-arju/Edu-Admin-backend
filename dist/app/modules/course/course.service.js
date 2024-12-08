@@ -8,8 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.acadmicDepartmentServices = void 0;
+exports.courseServices = void 0;
+const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
+const course_constant_1 = require("./course.constant");
 const course_model_1 = require("./course.model");
 const createCourseIntoDb = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield course_model_1.Course.create(payload);
@@ -17,12 +22,18 @@ const createCourseIntoDb = (payload) => __awaiter(void 0, void 0, void 0, functi
 });
 // Get single semester
 const getSingleCourseFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield course_model_1.Course.findById(id).populate('academicFaculty');
+    const result = yield course_model_1.Course.findById(id).populate('preRequisiteCourses.course');
     return result;
 });
 // Get all semester
-const getAllCourseFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield course_model_1.Course.find().populate('academicFaculty');
+const getAllCourseFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    const courseQuery = new QueryBuilder_1.default(course_model_1.Course.find().populate('preRequisiteCourses.course'), query)
+        .search(course_constant_1.courseSearchableField)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+    const result = yield courseQuery.modelQuery;
     return result;
 });
 // Update single semester
@@ -34,10 +45,10 @@ const updateSingleCourseIntoDB = (id, payload) => __awaiter(void 0, void 0, void
 });
 // Delete single semester
 const deleteSingleCourseFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield course_model_1.Course.deleteOne({ _id: id });
+    const result = yield course_model_1.Course.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
     return result;
 });
-exports.acadmicDepartmentServices = {
+exports.courseServices = {
     createCourseIntoDb,
     getSingleCourseFromDB,
     updateSingleCourseIntoDB,
