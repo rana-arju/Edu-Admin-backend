@@ -5,10 +5,7 @@ import { courseController } from './course.controller';
 
 const router = express.Router();
 
-router.get(
-  '/get-all-course',
-  courseController.getAllCourses
-);
+router.get('/get-all-course', courseController.getAllCourses);
 
 router.post(
   '/create-course',
@@ -20,7 +17,17 @@ router.get('/:id', courseController.getSingleCourse);
 router.patch(
   '/:id',
   validationRequest(courseValidation.UpdateCoursetSchemaValidation),
-  courseController.updateSingleCourse
+  courseController.updateSingleCourse,
+);
+router.put(
+  '/:courseId/assign-faculties',
+  validationRequest(courseValidation.facultyWithCourseValidation),
+  courseController.assignFaculties,
+);
+router.delete(
+  '/:courseId/remove-faculties',
+  validationRequest(courseValidation.facultyWithCourseValidation),
+  courseController.removeFacultyFromCourse,
 );
 router.delete('/:id', courseController.deleteCourse);
 

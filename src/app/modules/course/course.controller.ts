@@ -5,7 +5,7 @@ import { courseServices } from './course.service';
 const createCourse = catchAsync(async (req, res) => {
   // will call service func to send this data
 
-  const result = await courseServices.createCourseIntoDb(req.body)
+  const result = await courseServices.createCourseIntoDb(req.body);
 
   // send response
 
@@ -21,7 +21,7 @@ const getSingleCourse = catchAsync(async (req, res) => {
   const id = req.params.id;
 
   // will call service func to send this data
-  const result = await courseServices.getSingleCourseFromDB(id)
+  const result = await courseServices.getSingleCourseFromDB(id);
 
   // send response
 
@@ -33,9 +33,9 @@ const getSingleCourse = catchAsync(async (req, res) => {
   });
 });
 const getAllCourses = catchAsync(async (req, res) => {
-  const query = req.query
+  const query = req.query;
   // will call service func to send this data
-const result = await courseServices.getAllCourseFromDB(query)
+  const result = await courseServices.getAllCourseFromDB(query);
   // send response
 
   sendResponse(res, {
@@ -46,10 +46,11 @@ const result = await courseServices.getAllCourseFromDB(query)
   });
 });
 const updateSingleCourse = catchAsync(async (req, res) => {
-  //const id = req.params.id;
-  // const payload = req.body;
+  const id = req.params.id;
+  const payload = req.body;
 
   // will call service func to send this data
+  const result = await courseServices.updateSingleCourseIntoDB(id, payload);
 
   // send response
 
@@ -57,7 +58,7 @@ const updateSingleCourse = catchAsync(async (req, res) => {
     success: true,
     statusCode: 200,
     message: 'Course updated succesfully',
-    data: '',
+    data: result,
   });
 });
 
@@ -67,7 +68,7 @@ const deleteCourse = catchAsync(async (req, res) => {
   const id = req.params.id;
 
   // will call service func to send this data
-const result = await courseServices.deleteSingleCourseFromDB(id)
+  const result = await courseServices.deleteSingleCourseFromDB(id);
   // send response
 
   sendResponse(res, {
@@ -78,10 +79,48 @@ const result = await courseServices.deleteSingleCourseFromDB(id)
   });
 });
 
+// assign Faculties
+
+const removeFacultyFromCourse = catchAsync(async (req, res) => {
+  const { courseId } = req.params;
+  const {faculties} = req.body
+
+  // will call service func to send this data
+  const result = await courseServices.facultyRemoveFromDB(courseId, faculties);
+  // send response
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Faculties remove succesful',
+    data: result,
+  });
+});
+const assignFaculties = catchAsync(async (req, res) => {
+  const { courseId } = req.params;
+  const {faculties} = req.body
+
+  // will call service func to send this data
+  const result = await courseServices.facultiesAssignIntoDB(
+    courseId,
+    faculties,
+  );
+  // send response
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Faculties assign succesful',
+    data: result,
+  });
+});
+
 export const courseController = {
   createCourse,
   getSingleCourse,
   deleteCourse,
   updateSingleCourse,
   getAllCourses,
+  assignFaculties,
+  removeFacultyFromCourse,
 };

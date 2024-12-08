@@ -52,15 +52,16 @@ const getAllCourses = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     });
 }));
 const updateSingleCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //const id = req.params.id;
-    // const payload = req.body;
+    const id = req.params.id;
+    const payload = req.body;
     // will call service func to send this data
+    const result = yield course_service_1.courseServices.updateSingleCourseIntoDB(id, payload);
     // send response
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: 200,
         message: 'Course updated succesfully',
-        data: '',
+        data: result,
     });
 }));
 // student delete
@@ -76,10 +77,39 @@ const deleteCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
         data: result,
     });
 }));
+// assign Faculties
+const removeFacultyFromCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { courseId } = req.params;
+    const { faculties } = req.body;
+    // will call service func to send this data
+    const result = yield course_service_1.courseServices.facultyRemoveFromDB(courseId, faculties);
+    // send response
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: 200,
+        message: 'Faculties remove succesful',
+        data: result,
+    });
+}));
+const assignFaculties = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { courseId } = req.params;
+    const { faculties } = req.body;
+    // will call service func to send this data
+    const result = yield course_service_1.courseServices.facultiesAssignIntoDB(courseId, faculties);
+    // send response
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: 200,
+        message: 'Faculties assign succesful',
+        data: result,
+    });
+}));
 exports.courseController = {
     createCourse,
     getSingleCourse,
     deleteCourse,
     updateSingleCourse,
     getAllCourses,
+    assignFaculties,
+    removeFacultyFromCourse,
 };

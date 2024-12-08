@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { Types } from 'mongoose';
 
 export type IpreRequisiteCourses = {
   course: Types.ObjectId;
@@ -11,4 +11,9 @@ export type ICourse = {
   credits: number;
   preRequisiteCourses: [IpreRequisiteCourses];
   isDeleted?: boolean;
+};
+
+export type ICourseFaculties = {
+  course: Types.ObjectId;
+  faculties: [Types.ObjectId];
 };
