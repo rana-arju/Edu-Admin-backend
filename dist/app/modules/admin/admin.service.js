@@ -32,7 +32,7 @@ const user_model_1 = require("../user/user.model");
 const admin_constant_1 = require("./admin.constant");
 const admin_schema_1 = require("./admin.schema");
 const getAllAdminsFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const adminQuery = new QueryBuilder_1.default(admin_schema_1.Admin.find(), query)
+    const adminQuery = new QueryBuilder_1.default(admin_schema_1.Admin.find().populate('user'), query)
         .search(admin_constant_1.AdminSearchableFields)
         .filter()
         .sort()

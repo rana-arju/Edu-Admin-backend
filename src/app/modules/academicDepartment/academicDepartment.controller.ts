@@ -36,8 +36,9 @@ const getSingleAcademicDepartment = catchAsync(async (req, res) => {
 });
 const getAllAcademicDepartment = catchAsync(async (req, res) => {
   // will call service func to send this data
-  const result =
-    await acadmicDepartmentServices.getAllAcademicDepartmentFromDB();
+  const result = await acadmicDepartmentServices.getAllAcademicDepartmentFromDB(
+    req.query,
+  );
 
   // send response
 

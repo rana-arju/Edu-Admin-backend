@@ -8,7 +8,7 @@ import {IAdmin } from './admin.interface';
 import { Admin } from './admin.schema';
 
 const getAllAdminsFromDB = async (query: Record<string, unknown>) => {
-  const adminQuery = new QueryBuilder(Admin.find(), query)
+  const adminQuery = new QueryBuilder(Admin.find().populate('user'), query)
     .search(AdminSearchableFields)
     .filter()
     .sort()

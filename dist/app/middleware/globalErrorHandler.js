@@ -40,7 +40,7 @@ const globalErrorHandler = (err, req, res, next) => {
         message = simplifiedError === null || simplifiedError === void 0 ? void 0 : simplifiedError.message;
         errorSources = simplifiedError === null || simplifiedError === void 0 ? void 0 : simplifiedError.errorSources;
     }
-    else if (err.code == 11000) {
+    else if (err.code && err.code === 11000) {
         const simplifiedError = (0, handleDuplicateError_1.default)(err);
         statusCode = simplifiedError === null || simplifiedError === void 0 ? void 0 : simplifiedError.statusCode;
         message = simplifiedError === null || simplifiedError === void 0 ? void 0 : simplifiedError.message;
@@ -69,7 +69,6 @@ const globalErrorHandler = (err, req, res, next) => {
         success: false,
         message,
         errorSources,
-        err,
         stack: config_1.default.node_env === 'production' ? undefined : err.stack, // Avoid exposing full error details in production
     });
 };

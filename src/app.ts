@@ -22,7 +22,6 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // Error-handling middleware
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use(globalErrorHandler);
 app.use(notFound);
 export default app;

@@ -41,7 +41,7 @@ const getSingleAcademicDepartment = (0, catchAsync_1.default)((req, res) => __aw
 }));
 const getAllAcademicDepartment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // will call service func to send this data
-    const result = yield academicDepartment_service_1.acadmicDepartmentServices.getAllAcademicDepartmentFromDB();
+    const result = yield academicDepartment_service_1.acadmicDepartmentServices.getAllAcademicDepartmentFromDB(req.query);
     // send response
     (0, sendResponse_1.default)(res, {
         success: true,

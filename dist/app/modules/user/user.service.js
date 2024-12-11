@@ -56,7 +56,7 @@ const createStudentIntoDB = (password, payload) => __awaiter(void 0, void 0, voi
     catch (error) {
         yield session.abortTransaction();
         yield session.endSession();
-        throw new Error(error);
+        throw error;
     }
     /*
     const student = new Student(studentData);
@@ -104,7 +104,7 @@ const createFacultyIntoDB = (password, payload) => __awaiter(void 0, void 0, voi
     catch (err) {
         yield session.abortTransaction();
         yield session.endSession();
-        throw new Error(err);
+        throw err;
     }
 });
 const createAdminIntoDB = (password, payload) => __awaiter(void 0, void 0, void 0, function* () {
@@ -140,7 +140,7 @@ const createAdminIntoDB = (password, payload) => __awaiter(void 0, void 0, void 
     catch (err) {
         yield session.abortTransaction();
         yield session.endSession();
-        throw new Error(err);
+        throw err;
     }
 });
 exports.UserServices = {

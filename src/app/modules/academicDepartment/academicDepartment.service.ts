@@ -1,3 +1,5 @@
+import QueryBuilder from '../../builder/QueryBuilder';
+import { academicDepartmentSearchableField } from './academicDepartment.constant';
 import { IAcademicDepartment } from './academicDepartment.interface';
 import { AcademicDepartment } from './academicDepartment.model';
 
@@ -13,8 +15,19 @@ const getSingleAcademicDepartmentFromDB = async (id: string) => {
   return result;
 };
 // Get all semester
-const getAllAcademicDepartmentFromDB = async () => {
-  const result = await AcademicDepartment.find().populate('academicFaculty');
+const getAllAcademicDepartmentFromDB = async (
+  query: Record<string, unknown>,
+) => {
+  const academicDepartmentQuery = new QueryBuilder(
+    AcademicDepartment.find().populate('academicFaculty'),
+    query,
+  )
+    .search(academicDepartmentSearchableField)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();;
+  const result = await academicDepartmentQuery.modelQuery;
   return result;
 };
 // Update single semester

@@ -6,7 +6,11 @@ import { IStudent } from '../student/student.interface';
 import { Student } from '../student/student.schema';
 import { IUser } from './user.interface';
 import { User } from './user.model';
-import { generateAdminId, generateFacultyId, generateStudent } from './user.utils';
+import {
+  generateAdminId,
+  generateFacultyId,
+  generateStudent,
+} from './user.utils';
 import AppError from '../../errors/AppError';
 import { IFaculty } from '../faculty/faculty.interface';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
@@ -49,7 +53,7 @@ const createStudentIntoDB = async (password: string, payload: IStudent) => {
   } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
-    throw new Error(error);
+    throw error;
   }
 
   /*
@@ -114,7 +118,7 @@ const createFacultyIntoDB = async (password: string, payload: IFaculty) => {
   } catch (err: any) {
     await session.abortTransaction();
     await session.endSession();
-    throw new Error(err);
+    throw err;
   }
 };
 
@@ -160,7 +164,7 @@ const createAdminIntoDB = async (password: string, payload: IFaculty) => {
   } catch (err: any) {
     await session.abortTransaction();
     await session.endSession();
-    throw new Error(err);
+    throw err;
   }
 };
 

@@ -8,8 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.acadmicDepartmentServices = void 0;
+const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
+const academicDepartment_constant_1 = require("./academicDepartment.constant");
 const academicDepartment_model_1 = require("./academicDepartment.model");
 const createAcademicDepartmentIntoDb = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield academicDepartment_model_1.AcademicDepartment.create(payload);
@@ -21,8 +26,15 @@ const getSingleAcademicDepartmentFromDB = (id) => __awaiter(void 0, void 0, void
     return result;
 });
 // Get all semester
-const getAllAcademicDepartmentFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield academicDepartment_model_1.AcademicDepartment.find().populate('academicFaculty');
+const getAllAcademicDepartmentFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    const academicDepartmentQuery = new QueryBuilder_1.default(academicDepartment_model_1.AcademicDepartment.find().populate('academicFaculty'), query)
+        .search(academicDepartment_constant_1.academicDepartmentSearchableField)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+    ;
+    const result = yield academicDepartmentQuery.modelQuery;
     return result;
 });
 // Update single semester

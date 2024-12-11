@@ -89,7 +89,8 @@ const getAllStudentFromDB = (query) => __awaiter(void 0, void 0, void 0, functio
   
     return fieldsQuery;
     */
-    const studentQuery = new QueryBuilder_1.default(student_schema_1.Student.find().populate('user')
+    const studentQuery = new QueryBuilder_1.default(student_schema_1.Student.find()
+        .populate('user')
         .populate('admissionSemester')
         .populate({
         path: 'academicDepartment',

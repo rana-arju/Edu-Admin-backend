@@ -19,7 +19,6 @@ app.get('/', (req, res) => {
     res.send('Server is Working...');
 });
 // Error-handling middleware
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use(globalErrorHandler_1.globalErrorHandler);
 app.use(notFound_1.notFound);
 exports.default = app;

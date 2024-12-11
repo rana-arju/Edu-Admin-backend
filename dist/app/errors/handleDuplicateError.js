@@ -5,7 +5,7 @@ const handleDuplicateError = (err) => {
     const extractedMessage = match && match[1];
     const errorSources = [
         {
-            path: "",
+            path: '',
             message: `${extractedMessage} is already exists`,
         },
     ];
