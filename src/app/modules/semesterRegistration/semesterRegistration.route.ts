@@ -5,7 +5,6 @@ import { SemesterRegistrationValidation } from './semesterRegistration.validatio
 
 const router = express.Router();
 
-
 router.post(
   '/create-semester-registration',
   validationRequest(
@@ -22,7 +21,12 @@ router.patch(
 
   semesterRegistrationController.updateSingleRegisteredSemester,
 );
-router.get('/:id', semesterRegistrationController.getSingleAcademicDepartment);
-router.get('/', semesterRegistrationController.getAllAcademicDepartment);
+router.delete(
+  '/:id',
+
+  semesterRegistrationController.deleteSemesterRegistration,
+);
+router.get('/:id', semesterRegistrationController.getSingleRegisteredSemester);
+router.get('/', semesterRegistrationController.getAllRegisteredSemester);
 
 export const SemesterRegistrationRoutes = router;

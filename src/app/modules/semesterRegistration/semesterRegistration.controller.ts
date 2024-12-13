@@ -3,10 +3,6 @@ import catchAsync from '../../utils/catchAsync';
 import { semesterRegistrationServices } from './semesterRegistration.service';
 
 const createAcademicSemesterRegistration = catchAsync(async (req, res) => {
-
-
-
-
   // will call service func to send this data
   const result =
     await semesterRegistrationServices.createSemesterRegistrationIntoDb(
@@ -26,7 +22,6 @@ const createAcademicSemesterRegistration = catchAsync(async (req, res) => {
 const getSingleRegisteredSemester = catchAsync(async (req, res) => {
   const id = req.params.id;
   console.log(id);
-  
 
   // will call service func to send this data
   const result =
@@ -63,7 +58,7 @@ const updateSingleRegisteredSemester = catchAsync(async (req, res) => {
 
   // will call service func to send this data
   const result =
-    await semesterRegistrationServices.updateSingleAcademicDepartmentIntoDB(
+    await semesterRegistrationServices.updateSingleRegisterSemestertIntoDB(
       id,
       payload,
     );
@@ -73,17 +68,28 @@ const updateSingleRegisteredSemester = catchAsync(async (req, res) => {
   sendResponse(res, {
     success: true,
     statusCode: 200,
-    message: 'Academic department updated succesfully',
+    message: 'Semester Registration updated succesfully',
     data: result,
   });
 });
 
+const deleteSemesterRegistration = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result =
+    await semesterRegistrationServices.deleteSemesterRegistrationFromDB(id);
 
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Semester Registration is updated successfully',
+    data: result,
+  });
+});
 
 export const semesterRegistrationController = {
   createAcademicSemesterRegistration,
-  getSingleAcademicDepartment: getSingleRegisteredSemester,
-  // deleteAcademicDepartment,
+  getSingleRegisteredSemester,
   updateSingleRegisteredSemester,
-  getAllAcademicDepartment: getAllRegisteredSemester,
+  getAllRegisteredSemester,
+  deleteSemesterRegistration,
 };

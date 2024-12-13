@@ -40,8 +40,44 @@ const updateOfferedCourse = (0, catchAsync_1.default)((req, res) => __awaiter(vo
         data: result,
     });
 }));
-// student delete
+const getSingleOfferedCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    // will call service func to send this data
+    const result = yield offeredCourse_service_1.offeredCourseServices.getSingleOfferedCourseFromDB(id);
+    // send response
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: 200,
+        message: 'Offered Course get succesfully',
+        data: result,
+    });
+}));
+const getAllOfferedCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // will call service func to send this data
+    const result = yield offeredCourse_service_1.offeredCourseServices.getAllOfferedCourseFromDB();
+    // send response
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: 200,
+        message: 'Offered Course get succesfully',
+        data: result,
+    });
+}));
+// offered Course delete
+const deleteOfferedCourseFromDB = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield offeredCourse_service_1.offeredCourseServices.deleteOfferedCourseFromDB(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: 'OfferedCourse deleted successfully',
+        data: result,
+    });
+}));
 exports.offeredCourseController = {
     createOfferedCourse,
     updateOfferedCourse,
+    getSingleOfferedCourse,
+    getAllOfferedCourse,
+    deleteOfferedCourseFromDB,
 };

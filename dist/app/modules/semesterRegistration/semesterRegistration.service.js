@@ -13,11 +13,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.semesterRegistrationServices = void 0;
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const mongoose_1 = __importDefault(require("mongoose"));
 const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const academicSemester_model_1 = require("../academicSemester/academicSemester.model");
 const semesterRegistration_constant_1 = require("./semesterRegistration.constant");
 const semesterRegistration_model_1 = require("./semesterRegistration.model");
+const offeredCourse_model_1 = require("../offeredCourse/offeredCourse.model");
 const createSemesterRegistrationIntoDb = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // check any semester upcomming or ongoining
     const isSemesterUpcomingOrOngoing = yield semesterRegistration_model_1.SemesterRegistration.findOne({
@@ -87,9 +90,56 @@ const updateSingleRegisterSemestertIntoDB = (id, payload) => __awaiter(void 0, v
     });
     return result;
 });
+// Delete Semester Registration
+const deleteSemesterRegistrationFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    /**
+    * Step1: Delete associated offered courses.
+    * Step2: Delete semester registraton when the status is
+    'UPCOMING'.
+    **/
+    // checking if the semester registration is exist
+    const isSemesterRegistrationExists = yield semesterRegistration_model_1.SemesterRegistration.findById(id);
+    if (!isSemesterRegistrationExists) {
+        throw new AppError_1.default(404, 'This registered semester is not found !');
+    }
+    // checking if the status is still "UPCOMING"
+    const semesterRegistrationStatus = isSemesterRegistrationExists.status;
+    if (semesterRegistrationStatus !== 'UPCOMING') {
+        throw new AppError_1.default(400, `You can not update as the registered semester is ${semesterRegistrationStatus}`);
+    }
+    const session = yield mongoose_1.default.startSession();
+    //deleting associated offered courses
+    try {
+        session.startTransaction();
+        const deletedOfferedCourse = yield offeredCourse_model_1.OfferedCourse.deleteMany({
+            semesterRegistration: id,
+        }, {
+            session,
+        });
+        if (!deletedOfferedCourse) {
+            throw new AppError_1.default(400, 'Failed to delete semester registration !');
+        }
+        const deletedSemisterRegistration = yield semesterRegistration_model_1.SemesterRegistration.findByIdAndDelete(id, {
+            session,
+            new: true,
+        });
+        if (!deletedSemisterRegistration) {
+            throw new AppError_1.default(400, 'Failed to delete semester registration !');
+        }
+        yield session.commitTransaction();
+        yield session.endSession();
+        return null;
+    }
+    catch (err) {
+        yield session.abortTransaction();
+        yield session.endSession();
+        throw new Error(err);
+    }
+});
 exports.semesterRegistrationServices = {
     createSemesterRegistrationIntoDb,
     getSingleRegisteredSemesterFromDB,
-    updateSingleAcademicDepartmentIntoDB: updateSingleRegisterSemestertIntoDB,
+    updateSingleRegisterSemestertIntoDB,
     getAllRegisteredSemesterFromDB,
+    deleteSemesterRegistrationFromDB,
 };

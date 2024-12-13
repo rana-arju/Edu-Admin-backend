@@ -55,19 +55,29 @@ const updateSingleRegisteredSemester = (0, catchAsync_1.default)((req, res) => _
     const id = req.params.id;
     const payload = req.body;
     // will call service func to send this data
-    const result = yield semesterRegistration_service_1.semesterRegistrationServices.updateSingleAcademicDepartmentIntoDB(id, payload);
+    const result = yield semesterRegistration_service_1.semesterRegistrationServices.updateSingleRegisterSemestertIntoDB(id, payload);
     // send response
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: 200,
-        message: 'Academic department updated succesfully',
+        message: 'Semester Registration updated succesfully',
+        data: result,
+    });
+}));
+const deleteSemesterRegistration = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield semesterRegistration_service_1.semesterRegistrationServices.deleteSemesterRegistrationFromDB(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Semester Registration is updated successfully',
         data: result,
     });
 }));
 exports.semesterRegistrationController = {
     createAcademicSemesterRegistration,
-    getSingleAcademicDepartment: getSingleRegisteredSemester,
-    // deleteAcademicDepartment,
+    getSingleRegisteredSemester,
     updateSingleRegisteredSemester,
-    getAllAcademicDepartment: getAllRegisteredSemester,
+    getAllRegisteredSemester,
+    deleteSemesterRegistration,
 };
