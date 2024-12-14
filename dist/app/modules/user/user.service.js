@@ -144,7 +144,7 @@ const createAdminIntoDB = (password, payload) => __awaiter(void 0, void 0, void 
     }
 });
 exports.UserServices = {
-    createUserIntoDB: createStudentIntoDB,
+    createStudentIntoDB,
     createFacultyIntoDB,
     createAdminIntoDB,
 };

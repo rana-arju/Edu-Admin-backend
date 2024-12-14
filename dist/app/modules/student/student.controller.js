@@ -30,6 +30,7 @@ const getAllStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
 }));
 const getStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
+    console.log(req.user);
     // will call service func to send this data
     const result = yield student_service_1.StudentServices.getStudentFromDB(id);
     // send response

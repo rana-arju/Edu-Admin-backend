@@ -2,12 +2,13 @@ import express from 'express';
 import { updateAdminValidationSchema } from './admin.validation';
 import validationRequest from '../../middleware/validedRequest';
 import { AdminControllers } from './admin.controller';
+import auth from '../../middleware/auth';
 
 const router = express.Router();
 
 router.get('/', AdminControllers.getAllAdmins);
 
-router.get('/:id', AdminControllers.getSingleAdmin);
+router.get('/:id',auth(), AdminControllers.getSingleAdmin);
 
 router.patch(
   '/:id',

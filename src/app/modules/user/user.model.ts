@@ -1,13 +1,14 @@
 import { model, Schema } from 'mongoose';
-import { IUser } from './user.interface';
+import { IUser, UserModel } from './user.interface';
 import bcrypt from 'bcrypt';
 import config from '../../config';
 
-const userModel = new Schema<IUser>(
+const userSchema = new Schema<IUser, UserModel>(
   {
     id: { type: String, unique: true },
-    password: { type: String, required: true },
+    password: { type: String, required: true, select: 0 },
     needsPasswordChange: { type: Boolean, default: true },
+    passwordChangeTime:  {type: Date},
     status: {
       type: String,
       enum: ['in-progress', 'blocked'],
@@ -19,16 +20,26 @@ const userModel = new Schema<IUser>(
   { timestamps: true },
 );
 
-userModel.pre('save', async function (next) {
+userSchema.pre('save', async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
   user.password = await bcrypt.hash(user.password, Number(config.salt_rounds));
   next();
 });
 
-userModel.post('save', function (doc, next) {
+userSchema.post('save', function (doc, next) {
   doc.password = '';
   next();
 });
+userSchema.statics.isUserExistByCustomId = async function (id: string) {
+  return await User.findOne({ id }).select("password");
+};
+userSchema.statics.isPasswordMatched = async function (
+  plainTextpassword: string,
+  hashPassword: string,
+) {
+  
+  return await bcrypt.compare(plainTextpassword, hashPassword);
+};
 
-export const User = model<IUser>('User', userModel);
+export const User = model<IUser, UserModel>('User', userSchema);

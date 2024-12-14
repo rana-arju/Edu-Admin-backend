@@ -20,7 +20,7 @@ const createStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     const { password, student: studentData } = req.body;
     //const zodParsedData = userSchemaValidation.parse(studentData);
     // will call service func to send this data
-    const result = yield user_service_1.UserServices.createUserIntoDB(password, studentData);
+    const result = yield user_service_1.UserServices.createStudentIntoDB(password, studentData);
     // send response
     (0, sendResponse_1.default)(res, {
         success: true,

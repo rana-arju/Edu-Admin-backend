@@ -21,7 +21,9 @@ const getAllStudent = catchAsync(async (req, res) => {
 });
 
 const getStudent = catchAsync(async (req, res) => {
-  const id = req.params.id;
+  const id = req.params.id; 
+  console.log(req.user);
+  
 
   // will call service func to send this data
   const result = await StudentServices.getStudentFromDB(id);

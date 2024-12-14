@@ -16,10 +16,11 @@ exports.User = void 0;
 const mongoose_1 = require("mongoose");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const config_1 = __importDefault(require("../../config"));
-const userModel = new mongoose_1.Schema({
+const userSchema = new mongoose_1.Schema({
     id: { type: String, unique: true },
-    password: { type: String, required: true },
+    password: { type: String, required: true, select: 0 },
     needsPasswordChange: { type: Boolean, default: true },
+    passwordChangeTime: { type: Date },
     status: {
         type: String,
         enum: ['in-progress', 'blocked'],
@@ -28,7 +29,7 @@ const userModel = new mongoose_1.Schema({
     role: { type: String, enum: ['faculty', 'student', 'admin'] },
     isDeleted: { type: Boolean, default: false },
 }, { timestamps: true });
-userModel.pre('save', function (next) {
+userSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const user = this;
@@ -36,8 +37,18 @@ userModel.pre('save', function (next) {
         next();
     });
 });
-userModel.post('save', function (doc, next) {
+userSchema.post('save', function (doc, next) {
     doc.password = '';
     next();
 });
-exports.User = (0, mongoose_1.model)('User', userModel);
+userSchema.statics.isUserExistByCustomId = function (id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield exports.User.findOne({ id }).select("password");
+    });
+};
+userSchema.statics.isPasswordMatched = function (plainTextpassword, hashPassword) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield bcrypt_1.default.compare(plainTextpassword, hashPassword);
+    });
+};
+exports.User = (0, mongoose_1.model)('User', userSchema);

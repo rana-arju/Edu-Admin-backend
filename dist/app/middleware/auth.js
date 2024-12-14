@@ -13,12 +13,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
-const validationRequest = (schema) => {
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const config_1 = __importDefault(require("../config"));
+const AppError_1 = __importDefault(require("../errors/AppError"));
+const auth = (...requiredRoles) => {
     return (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-        yield schema.parseAsync({
-            body: req.body,
-        });
+        var _a;
+        const token = req.headers.authorization;
+        if (!token) {
+            throw new AppError_1.default(401, 'You are unauthorized to access');
+        }
+        // if token is valid check
+        const decoded = jsonwebtoken_1.default.verify(token, config_1.default === null || config_1.default === void 0 ? void 0 : config_1.default.token);
+        const role = (_a = decoded === null || decoded === void 0 ? void 0 : decoded.data) === null || _a === void 0 ? void 0 : _a.role;
+        if (requiredRoles && !requiredRoles.includes(role)) {
+            throw new AppError_1.default(403, 'You are not authorized to access this resource');
+        }
+        req.user = decoded;
         next();
     }));
 };
-exports.default = validationRequest;
+exports.default = auth;

@@ -169,7 +169,7 @@ const createAdminIntoDB = async (password: string, payload: IFaculty) => {
 };
 
 export const UserServices = {
-  createUserIntoDB: createStudentIntoDB,
+  createStudentIntoDB,
   createFacultyIntoDB,
   createAdminIntoDB,
 };

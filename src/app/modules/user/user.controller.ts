@@ -7,7 +7,7 @@ const createStudent = catchAsync(async (req, res) => {
   //const zodParsedData = userSchemaValidation.parse(studentData);
 
   // will call service func to send this data
-  const result = await UserServices.createUserIntoDB(password, studentData);
+  const result = await UserServices.createStudentIntoDB(password, studentData);
 
   // send response
 
