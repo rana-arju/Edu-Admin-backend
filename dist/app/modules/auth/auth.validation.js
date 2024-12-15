@@ -22,7 +22,15 @@ const changePasswordSchemaValidation = zod_1.z.object({
         }),
     }),
 });
+const refreshTokenValidations = zod_1.z.object({
+    cookies: zod_1.z.object({
+        refreshToken: zod_1.z.string({
+            required_error: 'Refresh Token is required',
+        }),
+    }),
+});
 exports.authValidation = {
     loginSchemaValidation,
-    changePasswordSchemaValidation
+    changePasswordSchemaValidation,
+    refreshTokenValidations,
 };

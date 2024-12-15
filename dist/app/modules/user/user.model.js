@@ -43,12 +43,19 @@ userSchema.post('save', function (doc, next) {
 });
 userSchema.statics.isUserExistByCustomId = function (id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield exports.User.findOne({ id }).select("password");
+        return yield exports.User.findOne({ id }).select('+password');
     });
 };
 userSchema.statics.isPasswordMatched = function (plainTextpassword, hashPassword) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield bcrypt_1.default.compare(plainTextpassword, hashPassword);
+    });
+};
+userSchema.statics.isJWTIssuedBeforePasswordChange = function (passwordChange, jwtIssuesTimeStamp) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const passwordChangeTime = new Date(passwordChange).getTime() / 1000;
+        //console.log(passwordChangeTime > jwtIssuesTimeStamp);
+        return passwordChangeTime > jwtIssuesTimeStamp;
     });
 };
 exports.User = (0, mongoose_1.model)('User', userSchema);

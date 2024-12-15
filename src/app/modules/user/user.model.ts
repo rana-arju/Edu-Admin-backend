@@ -8,7 +8,7 @@ const userSchema = new Schema<IUser, UserModel>(
     id: { type: String, unique: true },
     password: { type: String, required: true, select: 0 },
     needsPasswordChange: { type: Boolean, default: true },
-    passwordChangeTime:  {type: Date},
+    passwordChangeTime: { type: Date },
     status: {
       type: String,
       enum: ['in-progress', 'blocked'],
@@ -32,14 +32,22 @@ userSchema.post('save', function (doc, next) {
   next();
 });
 userSchema.statics.isUserExistByCustomId = async function (id: string) {
-  return await User.findOne({ id }).select("password");
+  return await User.findOne({ id }).select('+password');
 };
 userSchema.statics.isPasswordMatched = async function (
   plainTextpassword: string,
   hashPassword: string,
 ) {
-  
   return await bcrypt.compare(plainTextpassword, hashPassword);
+};
+userSchema.statics.isJWTIssuedBeforePasswordChange = async function (
+  passwordChange: Date,
+  jwtIssuesTimeStamp: number,
+) {
+  const passwordChangeTime = new Date(passwordChange).getTime() / 1000;
+  //console.log(passwordChangeTime > jwtIssuesTimeStamp);
+  
+  return passwordChangeTime > jwtIssuesTimeStamp;
 };
 
 export const User = model<IUser, UserModel>('User', userSchema);

@@ -27,23 +27,31 @@ exports.authController = void 0;
 const auth_service_1 = require("./auth.service");
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
+const config_1 = __importDefault(require("../../config"));
 const loginUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // will call service func to send this data
     const result = yield auth_service_1.authServices.loginUsertIntoDB(req.body);
+    const { refreshToken, needsPasswordChange, accessToken } = result;
+    res.cookie('refreshToken', refreshToken, {
+        secure: config_1.default.node_env === 'production',
+        httpOnly: true,
+    });
     // send response
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: 200,
         message: 'user logged in successful',
-        data: result,
+        data: {
+            accessToken,
+            needsPasswordChange,
+        },
     });
 }));
 const chnagePassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     // will call service func to send this data
-    const user = (_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a.data;
     const passwordData = __rest(req.body, []);
-    const result = yield auth_service_1.authServices.passwordChnageIntoDB(user, passwordData);
+    const userData = req === null || req === void 0 ? void 0 : req.user;
+    const result = yield auth_service_1.authServices.passwordChnageIntoDB(userData, passwordData);
     // send response
     (0, sendResponse_1.default)(res, {
         success: true,
@@ -52,7 +60,24 @@ const chnagePassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
         data: result,
     });
 }));
+const refreshToken = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // will call service func to send this data
+    const { refreshToken } = req.cookies;
+    const result = yield auth_service_1.authServices.refreshTokenFromCookie(refreshToken);
+    res.cookie('refreshToken', refreshToken, {
+        secure: config_1.default.node_env === 'production',
+        httpOnly: true,
+    });
+    // send response
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: 200,
+        message: 'access token get successful',
+        data: result,
+    });
+}));
 exports.authController = {
     loginUser,
     chnagePassword,
+    refreshToken,
 };

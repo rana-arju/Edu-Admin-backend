@@ -27,6 +27,7 @@ const getSingleFaculty = (0, catchAsync_1.default)((req, res) => __awaiter(void 
     });
 }));
 const getAllFaculties = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req);
     const result = yield faculty_service_1.FacultyServices.getAllFacultiesFromDB(req.query);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,

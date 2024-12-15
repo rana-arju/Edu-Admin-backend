@@ -12,5 +12,8 @@ exports.default = {
     salt_rounds: process.env.BCRYPT_SALT_ROUNDS,
     default_password: process.env.DEFAULT_PASSWORD,
     node_env: process.env.NODE_ENV,
-    token: process.env.JWT_ACCESS_TOKEN
+    token: process.env.JWT_ACCESS_TOKEN,
+    refresh: process.env.REFRESH_TOKEN,
+    refresh_time: process.env.REFRESH_ACCESS_EXPIRES,
+    token_time: process.env.JWT_ACCESS_EXPIRES,
 };
