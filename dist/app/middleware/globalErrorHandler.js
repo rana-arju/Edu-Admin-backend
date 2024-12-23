@@ -46,6 +46,16 @@ const globalErrorHandler = (err, req, res, next) => {
         message = simplifiedError === null || simplifiedError === void 0 ? void 0 : simplifiedError.message;
         errorSources = simplifiedError === null || simplifiedError === void 0 ? void 0 : simplifiedError.errorSources;
     }
+    else if (err.name === 'JsonWebTokenError') {
+        statusCode = 401;
+        message = 'Invalid token. Please login again!';
+        errorSources = [
+            {
+                path: '',
+                message: 'Invalid token. Please login again!',
+            },
+        ];
+    }
     else if (err instanceof AppError_1.default) {
         statusCode = err === null || err === void 0 ? void 0 : err.statusCode;
         message = err === null || err === void 0 ? void 0 : err.message;

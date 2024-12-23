@@ -1,6 +1,7 @@
 import { UserServices } from './user.service';
 import sendResponse from '../../utils/sendResponse';
 import catchAsync from '../../utils/catchAsync';
+import { JwtPayload } from 'jsonwebtoken';
 
 const createStudent = catchAsync(async (req, res) => {
   const { password, student: studentData } = req.body;
@@ -44,8 +45,38 @@ const createAdmin = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getMe = catchAsync(async (req, res) => {
+  const { userId, role } = req.user as JwtPayload;
+
+  const result = await UserServices.getMeFromDB(userId, role);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: 'get succesfully',
+    data: result,
+  });
+});
+
+const userStatusChange = catchAsync(async (req, res) => {
+  const { status } = req.body;
+
+  const result = await UserServices.userStatusChangeIntoDB(
+    req.params.id,
+    status,
+  );
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: 'Status changed succesfully',
+    data: result,
+  });
+});
 export const userController = {
   createStudent,
   createFaculty,
   createAdmin,
+  getMe,
+  userStatusChange,
 };

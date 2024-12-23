@@ -4,8 +4,7 @@ import { User } from '../user/user.model';
 import { ILoginUser } from './auth.interface';
 import { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { createToken } from './auth.utils';
-import jwt from 'jsonwebtoken';
+import { createToken, verifyToken } from './auth.utils';
 import { sendEmail } from '../../utils/sendEmail';
 const loginUsertIntoDB = async (payload: ILoginUser) => {
   // user exists or not found
@@ -113,7 +112,7 @@ const refreshTokenFromCookie = async (token: string) => {
   }
 
   // if token is valid check
-  const decoded = jwt.verify(token, config?.refresh as string) as JwtPayload;
+  const decoded = verifyToken(token, config?.refresh as string);
 
   const { userId, iat } = decoded;
   const user = await User.isUserExistByCustomId(userId);
@@ -203,7 +202,7 @@ const resetPasswordIntoDB = async (
     throw new AppError(403, 'User already blocked');
   }
   // if token is valid check
-  const decoded = jwt.verify(token, config?.token as string) as JwtPayload;
+  const decoded = verifyToken(token, config?.token as string);
   const { userId, role } = decoded;
   if (userId !== isUser.id || payload.id !== userId) {
     throw new AppError(403, 'You are not authorized !');

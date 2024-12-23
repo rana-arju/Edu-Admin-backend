@@ -173,9 +173,32 @@ const createAdminIntoDB = async (password: string, payload: IFaculty) => {
     throw err;
   }
 };
+const getMeFromDB = async (userId: string, role: string) => {
+  let result = null;
+  if (role === 'student') {
+    result = await Student.findOne({ id: userId }).populate('user');
+  }
+  if (role === 'admin') {
+    result = await Admin.findOne({ id: userId }).populate('user');
+  }
+  if (role === 'faculty') {
+    result = await Faculty.findOne({ id: userId }).populate('user');
+  }
+  return result;
+};
+
+const userStatusChangeIntoDB = async (id: string, status: string) => {
+  const user = await User.findByIdAndUpdate(id, { status }, { new: true });
+  if (!user) {
+    throw new AppError(404, 'User not found');
+  }
+  return user;
+};
 
 export const UserServices = {
   createStudentIntoDB,
   createFacultyIntoDB,
   createAdminIntoDB,
+  getMeFromDB,
+  userStatusChangeIntoDB,
 };

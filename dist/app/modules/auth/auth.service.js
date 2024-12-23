@@ -18,7 +18,6 @@ const AppError_1 = __importDefault(require("../../errors/AppError"));
 const user_model_1 = require("../user/user.model");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const auth_utils_1 = require("./auth.utils");
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const sendEmail_1 = require("../../utils/sendEmail");
 const loginUsertIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // user exists or not found
@@ -90,7 +89,7 @@ const refreshTokenFromCookie = (token) => __awaiter(void 0, void 0, void 0, func
         throw new AppError_1.default(401, 'You are unauthorized to access');
     }
     // if token is valid check
-    const decoded = jsonwebtoken_1.default.verify(token, config_1.default === null || config_1.default === void 0 ? void 0 : config_1.default.refresh);
+    const decoded = (0, auth_utils_1.verifyToken)(token, config_1.default === null || config_1.default === void 0 ? void 0 : config_1.default.refresh);
     const { userId, iat } = decoded;
     const user = yield user_model_1.User.isUserExistByCustomId(userId);
     if (!user) {
@@ -157,7 +156,7 @@ const resetPasswordIntoDB = (payload, token) => __awaiter(void 0, void 0, void 0
         throw new AppError_1.default(403, 'User already blocked');
     }
     // if token is valid check
-    const decoded = jsonwebtoken_1.default.verify(token, config_1.default === null || config_1.default === void 0 ? void 0 : config_1.default.token);
+    const decoded = (0, auth_utils_1.verifyToken)(token, config_1.default === null || config_1.default === void 0 ? void 0 : config_1.default.token);
     const { userId, role } = decoded;
     if (userId !== isUser.id || payload.id !== userId) {
         throw new AppError_1.default(403, 'You are not authorized !');

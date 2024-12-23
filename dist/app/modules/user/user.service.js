@@ -150,8 +150,30 @@ const createAdminIntoDB = (password, payload) => __awaiter(void 0, void 0, void 
         throw err;
     }
 });
+const getMeFromDB = (userId, role) => __awaiter(void 0, void 0, void 0, function* () {
+    let result = null;
+    if (role === 'student') {
+        result = yield student_schema_1.Student.findOne({ id: userId }).populate('user');
+    }
+    if (role === 'admin') {
+        result = yield admin_schema_1.Admin.findOne({ id: userId }).populate('user');
+    }
+    if (role === 'faculty') {
+        result = yield faculty_schema_1.Faculty.findOne({ id: userId }).populate('user');
+    }
+    return result;
+});
+const userStatusChangeIntoDB = (id, status) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.User.findByIdAndUpdate(id, { status }, { new: true });
+    if (!user) {
+        throw new AppError_1.default(404, 'User not found');
+    }
+    return user;
+});
 exports.UserServices = {
     createStudentIntoDB,
     createFacultyIntoDB,
     createAdminIntoDB,
+    getMeFromDB,
+    userStatusChangeIntoDB,
 };

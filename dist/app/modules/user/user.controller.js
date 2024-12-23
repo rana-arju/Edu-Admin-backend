@@ -49,8 +49,30 @@ const createAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
         data: result,
     });
 }));
+const getMe = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId, role } = req.user;
+    const result = yield user_service_1.UserServices.getMeFromDB(userId, role);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 201,
+        success: true,
+        message: 'get succesfully',
+        data: result,
+    });
+}));
+const userStatusChange = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { status } = req.body;
+    const result = yield user_service_1.UserServices.userStatusChangeIntoDB(req.params.id, status);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 201,
+        success: true,
+        message: 'Status changed succesfully',
+        data: result,
+    });
+}));
 exports.userController = {
     createStudent,
     createFaculty,
     createAdmin,
+    getMe,
+    userStatusChange,
 };
