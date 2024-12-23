@@ -4,7 +4,7 @@ import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/AppError';
 import { User } from '../user/user.model';
 import { AdminSearchableFields } from './admin.constant';
-import {IAdmin } from './admin.interface';
+import { IAdmin } from './admin.interface';
 import { Admin } from './admin.schema';
 
 const getAllAdminsFromDB = async (query: Record<string, unknown>) => {

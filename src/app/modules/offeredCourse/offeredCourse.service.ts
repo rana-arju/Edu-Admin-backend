@@ -139,7 +139,7 @@ const updateOfferedCourseIntoDB = async (
 };
 // get single offer course
 const getSingleOfferedCourseFromDB = async (id: string) => {
-  const result = await OfferedCourse.findById( id );
+  const result = await OfferedCourse.findById(id);
 
   return result;
 };

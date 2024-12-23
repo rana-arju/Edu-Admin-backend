@@ -33,7 +33,6 @@ const getAllAcademicDepartmentFromDB = (query) => __awaiter(void 0, void 0, void
         .sort()
         .paginate()
         .fields();
-    ;
     const result = yield academicDepartmentQuery.modelQuery;
     return result;
 });

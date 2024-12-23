@@ -26,7 +26,7 @@ const getAllAcademicDepartmentFromDB = async (
     .filter()
     .sort()
     .paginate()
-    .fields();;
+    .fields();
   const result = await academicDepartmentQuery.modelQuery;
   return result;
 };

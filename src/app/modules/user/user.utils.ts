@@ -9,7 +9,7 @@ const findLastStudentId = async () => {
   return lastStudent?.id ? lastStudent?.id : undefined;
 };
 
-export const generateStudent = async (payload:IAcademicSemester) => { 
+export const generateStudent = async (payload: IAcademicSemester) => {
   let currentId = (0).toString();
   const lastStudentId = await findLastStudentId();
   const lastStudentSemesterCode = lastStudentId?.substring(4, 6);

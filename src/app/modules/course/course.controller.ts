@@ -83,7 +83,7 @@ const deleteCourse = catchAsync(async (req, res) => {
 
 const removeFacultyFromCourse = catchAsync(async (req, res) => {
   const { courseId } = req.params;
-  const {faculties} = req.body
+  const { faculties } = req.body;
 
   // will call service func to send this data
   const result = await courseServices.facultyRemoveFromDB(courseId, faculties);
@@ -98,7 +98,7 @@ const removeFacultyFromCourse = catchAsync(async (req, res) => {
 });
 const assignFaculties = catchAsync(async (req, res) => {
   const { courseId } = req.params;
-  const {faculties} = req.body
+  const { faculties } = req.body;
 
   // will call service func to send this data
   const result = await courseServices.facultiesAssignIntoDB(

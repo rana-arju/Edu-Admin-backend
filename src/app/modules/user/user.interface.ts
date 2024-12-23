@@ -4,6 +4,7 @@ import { USER_ROLE } from './user.constant';
 
 export interface IUser {
   id: string;
+  email: string;
   password: string;
   needsPasswordChange: boolean;
   passwordChangeTime?: Date;
@@ -21,6 +22,6 @@ export interface UserModel extends Model<IUser> {
   isJWTIssuedBeforePasswordChange(
     passwordChange: Date,
     jwtIssuesTimeStamp: number,
-  ):boolean
+  ): boolean;
 }
 export type IUserRole = keyof typeof USER_ROLE;

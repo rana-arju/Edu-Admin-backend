@@ -12,7 +12,9 @@ router.get(
 
 router.post(
   '/create-academic-department',
-   validationRequest(AcademicDepartmentValidation.CreateAcademicDepartmentSchemaValidation,),
+  validationRequest(
+    AcademicDepartmentValidation.CreateAcademicDepartmentSchemaValidation,
+  ),
 
   academicDepartmentController.createAcademicDepartment,
 );

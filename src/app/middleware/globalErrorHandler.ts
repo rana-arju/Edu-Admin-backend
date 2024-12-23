@@ -18,7 +18,7 @@ export const globalErrorHandler: ErrorRequestHandler = (
   next,
 ) => {
   let statusCode = 500;
-  let message ='Something went wrong!';
+  let message = 'Something went wrong!';
 
   let errorSources: IErrorSources = [
     {
@@ -70,7 +70,6 @@ export const globalErrorHandler: ErrorRequestHandler = (
     success: false,
     message,
     errorSources,
-   
 
     stack: config.node_env === 'production' ? undefined : err.stack, // Avoid exposing full error details in production
   });

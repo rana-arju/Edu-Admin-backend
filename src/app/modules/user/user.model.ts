@@ -2,10 +2,21 @@ import { model, Schema } from 'mongoose';
 import { IUser, UserModel } from './user.interface';
 import bcrypt from 'bcrypt';
 import config from '../../config';
+import validator from 'validator';
 
 const userSchema = new Schema<IUser, UserModel>(
   {
     id: { type: String, unique: true },
+    email: {
+      type: String,
+      trim: true,
+      unique: true,
+      required: [true, 'Email address is required.'],
+      validate: {
+        validator: (value: string) => validator.isEmail(value),
+        message: '{VALUE} is not valid email type.',
+      },
+    },
     password: { type: String, required: true, select: 0 },
     needsPasswordChange: { type: Boolean, default: true },
     passwordChangeTime: { type: Date },
@@ -46,7 +57,7 @@ userSchema.statics.isJWTIssuedBeforePasswordChange = async function (
 ) {
   const passwordChangeTime = new Date(passwordChange).getTime() / 1000;
   //console.log(passwordChangeTime > jwtIssuesTimeStamp);
-  
+
   return passwordChangeTime > jwtIssuesTimeStamp;
 };
 

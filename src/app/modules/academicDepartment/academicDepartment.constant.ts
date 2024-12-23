@@ -1,3 +1,1 @@
-export const academicDepartmentSearchableField = [
-"name"
-];
+export const academicDepartmentSearchableField = ['name'];

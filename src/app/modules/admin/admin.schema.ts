@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { BloodGroup, Gender } from './admin.constant';
-import { AdminModel,IAdmin,  IUserName } from './admin.interface';
+import { AdminModel, IAdmin, IUserName } from './admin.interface';
 
 const userNameSchema = new Schema<IUserName>({
   firstName: {

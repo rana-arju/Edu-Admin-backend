@@ -28,11 +28,13 @@ const offeredCourseSchema = new Schema<IOfferedCourse>(
     faculty: { type: Schema.Types.ObjectId, required: true, ref: 'Faculty' },
     maxCapacity: { type: Number, required: true },
     section: { type: Number, required: true },
-    days: [{
-      type: String,
-      enum: Days,
-      required: true,
-    }],
+    days: [
+      {
+        type: String,
+        enum: Days,
+        required: true,
+      },
+    ],
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
   },

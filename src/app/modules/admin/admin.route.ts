@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get('/', AdminControllers.getAllAdmins);
 
-router.get('/:id',auth(), AdminControllers.getSingleAdmin);
+router.get('/:id', auth(), AdminControllers.getSingleAdmin);
 
 router.patch(
   '/:id',

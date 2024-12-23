@@ -16,8 +16,19 @@ exports.User = void 0;
 const mongoose_1 = require("mongoose");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const config_1 = __importDefault(require("../../config"));
+const validator_1 = __importDefault(require("validator"));
 const userSchema = new mongoose_1.Schema({
     id: { type: String, unique: true },
+    email: {
+        type: String,
+        trim: true,
+        unique: true,
+        required: [true, 'Email address is required.'],
+        validate: {
+            validator: (value) => validator_1.default.isEmail(value),
+            message: '{VALUE} is not valid email type.',
+        },
+    },
     password: { type: String, required: true, select: 0 },
     needsPasswordChange: { type: Boolean, default: true },
     passwordChangeTime: { type: Date },

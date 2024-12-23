@@ -116,10 +116,7 @@ const deleteSemesterRegistrationFromDB = async (id: string) => {
   const isSemesterRegistrationExists = await SemesterRegistration.findById(id);
 
   if (!isSemesterRegistrationExists) {
-    throw new AppError(
-      404,
-      'This registered semester is not found !',
-    );
+    throw new AppError(404, 'This registered semester is not found !');
   }
 
   // checking if the status is still "UPCOMING"
@@ -149,10 +146,7 @@ const deleteSemesterRegistrationFromDB = async (id: string) => {
     );
 
     if (!deletedOfferedCourse) {
-      throw new AppError(
-        400,
-        'Failed to delete semester registration !',
-      );
+      throw new AppError(400, 'Failed to delete semester registration !');
     }
 
     const deletedSemisterRegistration =
@@ -162,10 +156,7 @@ const deleteSemesterRegistrationFromDB = async (id: string) => {
       });
 
     if (!deletedSemisterRegistration) {
-      throw new AppError(
-        400,
-        'Failed to delete semester registration !',
-      );
+      throw new AppError(400, 'Failed to delete semester registration !');
     }
 
     await session.commitTransaction();

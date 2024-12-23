@@ -1,4 +1,4 @@
-import { ISchedule } from "./offeredCourse.interface";
+import { ISchedule } from './offeredCourse.interface';
 
 export const hasTimeConflict = (
   assignedSchedule: ISchedule[],

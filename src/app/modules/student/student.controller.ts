@@ -1,13 +1,10 @@
-
 import { StudentServices } from './student.service';
 import sendResponse from '../../utils/sendResponse';
 import catchAsync from '../../utils/catchAsync';
 
-
-
 const getAllStudent = catchAsync(async (req, res) => {
   // will call service func to send this data
-  const searchTerm  = req.query;
+  const searchTerm = req.query;
   const result = await StudentServices.getAllStudentFromDB(searchTerm);
 
   // send response
@@ -21,9 +18,8 @@ const getAllStudent = catchAsync(async (req, res) => {
 });
 
 const getStudent = catchAsync(async (req, res) => {
-  const id = req.params.id; 
+  const id = req.params.id;
   console.log(req.user);
-  
 
   // will call service func to send this data
   const result = await StudentServices.getStudentFromDB(id);
@@ -59,7 +55,7 @@ const deleteStudent = catchAsync(async (req, res) => {
 
 const updateStudent = catchAsync(async (req, res) => {
   const id = req.params.id;
-  const {student} = req.body
+  const { student } = req.body;
 
   // will call service func to send this data
   const result = await StudentServices.updateStudentFromDB(id, student);
@@ -78,5 +74,5 @@ export const studentController = {
   getAllStudent,
   getStudent,
   deleteStudent,
-  updateStudent, 
+  updateStudent,
 };

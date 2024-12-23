@@ -19,10 +19,12 @@ const user_model_1 = require("../user/user.model");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const auth_utils_1 = require("./auth.utils");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const sendEmail_1 = require("../../utils/sendEmail");
 const loginUsertIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // user exists or not found
-    const user = yield user_model_1.User.findOne({ id: payload === null || payload === void 0 ? void 0 : payload.id }).select('+password');
-    if (!(yield user_model_1.User.isUserExistByCustomId(payload === null || payload === void 0 ? void 0 : payload.id))) {
+    //const user = await User.findOne({ id: payload?.id }).select('+password');
+    const user = yield user_model_1.User.isUserExistByCustomId(payload === null || payload === void 0 ? void 0 : payload.id);
+    if (!user) {
         throw new AppError_1.default(404, 'User not found');
     }
     //checking is user already deleted
@@ -53,8 +55,8 @@ const loginUsertIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function
     };
 });
 const passwordChnageIntoDB = (user, passwordData) => __awaiter(void 0, void 0, void 0, function* () {
-    const isUser = yield user_model_1.User.findOne({ id: user === null || user === void 0 ? void 0 : user.userId }).select('+password');
-    if (!(yield user_model_1.User.isUserExistByCustomId(user === null || user === void 0 ? void 0 : user.userId))) {
+    const isUser = yield user_model_1.User.isUserExistByCustomId(user === null || user === void 0 ? void 0 : user.userId);
+    if (!isUser) {
         throw new AppError_1.default(404, 'User not found');
     }
     //checking is user already deleted
@@ -115,8 +117,66 @@ const refreshTokenFromCookie = (token) => __awaiter(void 0, void 0, void 0, func
     const accessToken = (0, auth_utils_1.createToken)(jwtPayload, config_1.default.token, config_1.default.token_time);
     return { accessToken };
 });
+const forgetPasswordIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const isUser = yield user_model_1.User.isUserExistByCustomId(id);
+    if (!isUser) {
+        throw new AppError_1.default(404, 'User not found');
+    }
+    //checking is user already deleted
+    const isDeleted = isUser === null || isUser === void 0 ? void 0 : isUser.isDeleted;
+    if (isDeleted) {
+        throw new AppError_1.default(403, 'User already deleted');
+    }
+    //checking is user blocked or not allowed
+    const isBlocked = (isUser === null || isUser === void 0 ? void 0 : isUser.status) === 'blocked';
+    if (isBlocked) {
+        throw new AppError_1.default(403, 'User already blocked');
+    }
+    const jwtPayload = {
+        userId: isUser === null || isUser === void 0 ? void 0 : isUser.id,
+        role: isUser === null || isUser === void 0 ? void 0 : isUser.role,
+    };
+    const resetToken = (0, auth_utils_1.createToken)(jwtPayload, config_1.default.token, '10m');
+    const resetUILink = `${config_1.default.reset_pass_url}?id=${isUser.id}&token=${resetToken}`;
+    console.log(resetUILink);
+    (0, sendEmail_1.sendEmail)(isUser.email, resetUILink);
+});
+const resetPasswordIntoDB = (payload, token) => __awaiter(void 0, void 0, void 0, function* () {
+    const isUser = yield user_model_1.User.isUserExistByCustomId(payload === null || payload === void 0 ? void 0 : payload.id);
+    if (!isUser) {
+        throw new AppError_1.default(404, 'User not found');
+    }
+    //checking is user already deleted
+    const isDeleted = isUser === null || isUser === void 0 ? void 0 : isUser.isDeleted;
+    if (isDeleted) {
+        throw new AppError_1.default(403, 'User already deleted');
+    }
+    //checking is user blocked or not allowed
+    const isBlocked = (isUser === null || isUser === void 0 ? void 0 : isUser.status) === 'blocked';
+    if (isBlocked) {
+        throw new AppError_1.default(403, 'User already blocked');
+    }
+    // if token is valid check
+    const decoded = jsonwebtoken_1.default.verify(token, config_1.default === null || config_1.default === void 0 ? void 0 : config_1.default.token);
+    const { userId, role } = decoded;
+    if (userId !== isUser.id || payload.id !== userId) {
+        throw new AppError_1.default(403, 'You are not authorized !');
+    }
+    //has new password
+    const newHashPassword = yield bcrypt_1.default.hash(payload.newPassword, Number(config_1.default.salt_rounds));
+    yield user_model_1.User.findOneAndUpdate({
+        id: userId,
+        role,
+    }, {
+        password: newHashPassword,
+        needsPasswordChange: false,
+        passwordChangeTime: new Date(),
+    });
+});
 exports.authServices = {
     loginUsertIntoDB,
     passwordChnageIntoDB,
     refreshTokenFromCookie,
+    forgetPasswordIntoDB,
+    resetPasswordIntoDB,
 };

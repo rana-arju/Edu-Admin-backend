@@ -76,8 +76,30 @@ const refreshToken = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
         data: result,
     });
 }));
+const forgetPassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.body;
+    const result = yield auth_service_1.authServices.forgetPasswordIntoDB(id);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: 200,
+        message: 'Reset link is generated successfully',
+        data: result,
+    });
+}));
+const resetPassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const token = req.headers.authorization;
+    const result = yield auth_service_1.authServices.resetPasswordIntoDB(req.body, token);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: 200,
+        message: 'Password reset successful',
+        data: result,
+    });
+}));
 exports.authController = {
     loginUser,
     chnagePassword,
     refreshToken,
+    forgetPassword,
+    resetPassword,
 };

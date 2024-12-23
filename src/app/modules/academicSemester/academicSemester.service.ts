@@ -20,7 +20,7 @@ const createAcademicSemesterIntoDb = async (payload: IAcademicSemester) => {
 
 // Get single semester
 const getSingleAcademicSemesterFromDB = async (id: string) => {
-  const result = await AcademicSemester.findById( id );
+  const result = await AcademicSemester.findById(id);
 
   return result;
 };

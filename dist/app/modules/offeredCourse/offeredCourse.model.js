@@ -28,11 +28,13 @@ const offeredCourseSchema = new mongoose_1.Schema({
     faculty: { type: mongoose_1.Schema.Types.ObjectId, required: true, ref: 'Faculty' },
     maxCapacity: { type: Number, required: true },
     section: { type: Number, required: true },
-    days: [{
+    days: [
+        {
             type: String,
             enum: offeredCourse_constant_1.Days,
             required: true,
-        }],
+        },
+    ],
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
 }, { timestamps: true });

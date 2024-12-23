@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { BloodGroup, Gender } from './faculty.constant';
-import { FacultyModel,  IFaculty,  IUserName } from './faculty.interface';
+import { FacultyModel, IFaculty, IUserName } from './faculty.interface';
 
 const userNameSchema = new Schema<IUserName>({
   firstName: {
