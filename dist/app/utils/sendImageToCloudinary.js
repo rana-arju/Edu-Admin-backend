@@ -15,7 +15,7 @@ cloudinary_1.v2.config({
 });
 const sendImageToCloudinaryService = (path, imageName) => {
     return new Promise((resolve, reject) => {
-        cloudinary_1.v2.uploader.upload(path, { public_id: imageName }, function (error, result) {
+        cloudinary_1.v2.uploader.upload(path, { public_id: imageName, folder: 'edu-management' }, function (error, result) {
             if (error) {
                 reject(error);
             }
