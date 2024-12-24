@@ -42,6 +42,6 @@ const enrolledCourseSchema = new mongoose_1.Schema({
     isCompleted: { type: Boolean, default: false },
     grade: { type: String, enum: enrolledCourse_constant_1.Grade, default: 'NA' },
     gradePoints: { type: Number, min: 0, max: 4, default: 0 },
-    courseMarks: { type: courseMarkSchema },
+    courseMarks: { type: courseMarkSchema, default: {} },
 }, { timestamps: true });
 exports.EnrolledCourse = (0, mongoose_1.model)('EnrolledCourse', enrolledCourseSchema);

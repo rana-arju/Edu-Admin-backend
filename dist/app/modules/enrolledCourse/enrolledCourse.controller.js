@@ -17,8 +17,11 @@ const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const enrolledCourse_service_1 = require("./enrolledCourse.service");
 const createEnrolledCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const id = (_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a.userId;
+    const payload = req.body;
     // will call service func to send this data
-    const result = yield enrolledCourse_service_1.enrolledCourseServices.createEnrolledCourseIntoDb();
+    const result = yield enrolledCourse_service_1.enrolledCourseServices.createEnrolledCourseIntoDb(payload, id);
     // send response
     (0, sendResponse_1.default)(res, {
         success: true,
