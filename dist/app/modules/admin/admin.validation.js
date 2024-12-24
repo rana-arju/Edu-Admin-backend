@@ -10,7 +10,7 @@ const createUserNameValidationSchema = zod_1.z.object({
 });
 exports.createAdminValidationSchema = zod_1.z.object({
     body: zod_1.z.object({
-        password: zod_1.z.string().max(20),
+        password: zod_1.z.string().max(20).optional(),
         admin: zod_1.z.object({
             designation: zod_1.z.string(),
             name: createUserNameValidationSchema,

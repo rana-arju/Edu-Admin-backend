@@ -177,7 +177,6 @@ const forgetPasswordIntoDB = async (id: string) => {
 
   const resetToken = createToken(jwtPayload, config.token as string, '10m');
   const resetUILink = `${config.reset_pass_url}?id=${isUser.id}&token=${resetToken}`;
-  console.log(resetUILink);
 
   sendEmail(isUser.email, resetUILink);
 };

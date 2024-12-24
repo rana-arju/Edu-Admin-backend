@@ -8,7 +8,11 @@ const createStudent = catchAsync(async (req, res) => {
   //const zodParsedData = userSchemaValidation.parse(studentData);
 
   // will call service func to send this data
-  const result = await UserServices.createStudentIntoDB(password, studentData);
+  const result = await UserServices.createStudentIntoDB(
+    password,
+    studentData,
+    req.file,
+  );
 
   // send response
 
@@ -23,7 +27,11 @@ const createStudent = catchAsync(async (req, res) => {
 const createFaculty = catchAsync(async (req, res) => {
   const { password, faculty: facultyData } = req.body;
 
-  const result = await UserServices.createFacultyIntoDB(password, facultyData);
+  const result = await UserServices.createFacultyIntoDB(
+    password,
+    facultyData,
+    req.file,
+  );
 
   sendResponse(res, {
     statusCode: 201,
@@ -36,7 +44,11 @@ const createFaculty = catchAsync(async (req, res) => {
 const createAdmin = catchAsync(async (req, res) => {
   const { password, admin: adminData } = req.body;
 
-  const result = await UserServices.createAdminIntoDB(password, adminData);
+  const result = await UserServices.createAdminIntoDB(
+    password,
+    adminData,
+    req.file,
+  );
 
   sendResponse(res, {
     statusCode: 201,

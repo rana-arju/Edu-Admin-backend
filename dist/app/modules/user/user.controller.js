@@ -20,7 +20,7 @@ const createStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     const { password, student: studentData } = req.body;
     //const zodParsedData = userSchemaValidation.parse(studentData);
     // will call service func to send this data
-    const result = yield user_service_1.UserServices.createStudentIntoDB(password, studentData);
+    const result = yield user_service_1.UserServices.createStudentIntoDB(password, studentData, req.file);
     // send response
     (0, sendResponse_1.default)(res, {
         success: true,
@@ -31,7 +31,7 @@ const createStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
 }));
 const createFaculty = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { password, faculty: facultyData } = req.body;
-    const result = yield user_service_1.UserServices.createFacultyIntoDB(password, facultyData);
+    const result = yield user_service_1.UserServices.createFacultyIntoDB(password, facultyData, req.file);
     (0, sendResponse_1.default)(res, {
         statusCode: 201,
         success: true,
@@ -41,7 +41,7 @@ const createFaculty = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
 }));
 const createAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { password, admin: adminData } = req.body;
-    const result = yield user_service_1.UserServices.createAdminIntoDB(password, adminData);
+    const result = yield user_service_1.UserServices.createAdminIntoDB(password, adminData, req.file);
     (0, sendResponse_1.default)(res, {
         statusCode: 201,
         success: true,

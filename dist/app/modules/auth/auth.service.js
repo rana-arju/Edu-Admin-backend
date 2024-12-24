@@ -137,7 +137,6 @@ const forgetPasswordIntoDB = (id) => __awaiter(void 0, void 0, void 0, function*
     };
     const resetToken = (0, auth_utils_1.createToken)(jwtPayload, config_1.default.token, '10m');
     const resetUILink = `${config_1.default.reset_pass_url}?id=${isUser.id}&token=${resetToken}`;
-    console.log(resetUILink);
     (0, sendEmail_1.sendEmail)(isUser.email, resetUILink);
 });
 const resetPasswordIntoDB = (payload, token) => __awaiter(void 0, void 0, void 0, function* () {

@@ -19,4 +19,7 @@ exports.default = {
     reset_pass_url: process.env.RESET_LIVE_URL,
     email_user: process.env.EMAIL_USER,
     email_pass: process.env.EMAIL_PASSWORD,
+    cloudinary_api: process.env.CLOUDINARY_API_KEY,
+    cloudinary_cloude_name: process.env.CLOUDINARY_cLOUDE_NAME,
+    cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET,
 };

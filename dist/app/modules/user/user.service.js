@@ -24,7 +24,9 @@ const AppError_1 = __importDefault(require("../../errors/AppError"));
 const academicDepartment_model_1 = require("../academicDepartment/academicDepartment.model");
 const faculty_schema_1 = require("../faculty/faculty.schema");
 const admin_schema_1 = require("../admin/admin.schema");
-const createStudentIntoDB = (password, payload) => __awaiter(void 0, void 0, void 0, function* () {
+const sendImageToCloudinary_1 = require("../../utils/sendImageToCloudinary");
+const createStudentIntoDB = (password, payload, file) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const userData = {};
     userData.password = password || config_1.default.default_password;
     // set student role
@@ -41,12 +43,15 @@ const createStudentIntoDB = (password, payload) => __awaiter(void 0, void 0, voi
         session.startTransaction();
         userData.id = yield (0, user_utils_1.generateStudent)(admissionSemesterId);
         // Create user (transetion - 1)
+        const imageName = `${userData.id}${(_a = payload === null || payload === void 0 ? void 0 : payload.name) === null || _a === void 0 ? void 0 : _a.firstName}`;
+        const image = (yield (0, sendImageToCloudinary_1.sendImageToCloudinaryService)(file === null || file === void 0 ? void 0 : file.path, imageName));
         const newUser = yield user_model_1.User.create([userData], { session });
         if (!newUser.length) {
             throw new AppError_1.default(400, 'Failed to create user');
         }
         payload.id = newUser[0].id;
         payload.user = newUser[0]._id;
+        payload.profileImg = image === null || image === void 0 ? void 0 : image.secure_url;
         // create student (transection - 2)
         const newStudent = yield student_schema_1.Student.create([payload], { session });
         if (!newStudent.length) {
@@ -69,7 +74,8 @@ const createStudentIntoDB = (password, payload) => __awaiter(void 0, void 0, voi
   */
     // const result = await student.save(); // build in instance method provided by mongoose
 });
-const createFacultyIntoDB = (password, payload) => __awaiter(void 0, void 0, void 0, function* () {
+const createFacultyIntoDB = (password, payload, file) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     // create a user object
     const userData = {};
     //if password is not given , use deafult password
@@ -98,6 +104,9 @@ const createFacultyIntoDB = (password, payload) => __awaiter(void 0, void 0, voi
         payload.id = newUser[0].id;
         payload.user = newUser[0]._id; //reference _id
         // create a faculty (transaction-2)
+        const imageName = `${userData.id}${(_a = payload === null || payload === void 0 ? void 0 : payload.name) === null || _a === void 0 ? void 0 : _a.firstName}`;
+        const image = (yield (0, sendImageToCloudinary_1.sendImageToCloudinaryService)(file === null || file === void 0 ? void 0 : file.path, imageName));
+        payload.profileImg = image === null || image === void 0 ? void 0 : image.secure_url;
         const newFaculty = yield faculty_schema_1.Faculty.create([payload], { session });
         if (!newFaculty.length) {
             throw new AppError_1.default(400, 'Failed to create faculty');
@@ -112,7 +121,8 @@ const createFacultyIntoDB = (password, payload) => __awaiter(void 0, void 0, voi
         throw err;
     }
 });
-const createAdminIntoDB = (password, payload) => __awaiter(void 0, void 0, void 0, function* () {
+const createAdminIntoDB = (password, payload, file) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     // create a user object
     const userData = {};
     //if password is not given , use deafult password
@@ -136,6 +146,9 @@ const createAdminIntoDB = (password, payload) => __awaiter(void 0, void 0, void 
         payload.id = newUser[0].id;
         payload.user = newUser[0]._id; //reference _id
         // create a admin (transaction-2)
+        const imageName = `${userData.id}${(_a = payload === null || payload === void 0 ? void 0 : payload.name) === null || _a === void 0 ? void 0 : _a.firstName}`;
+        const image = (yield (0, sendImageToCloudinary_1.sendImageToCloudinaryService)(file === null || file === void 0 ? void 0 : file.path, imageName));
+        payload.profileImg = image === null || image === void 0 ? void 0 : image.secure_url;
         const newAdmin = yield admin_schema_1.Admin.create([payload], { session });
         if (!newAdmin.length) {
             throw new AppError_1.default(400, 'Failed to create admin');
