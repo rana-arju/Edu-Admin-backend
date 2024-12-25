@@ -19,7 +19,10 @@ const AppError_1 = __importDefault(require("../../errors/AppError"));
 const offeredCourse_model_1 = require("../offeredCourse/offeredCourse.model");
 const student_schema_1 = require("../student/student.schema");
 const enrolledCourse_model_1 = require("./enrolledCourse.model");
+const semesterRegistration_model_1 = require("../semesterRegistration/semesterRegistration.model");
+const course_model_1 = require("../course/course.model");
 const createEnrolledCourseIntoDb = (payload, id) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     // check offered course existence and semester registration
     const isOfferedCourseExist = yield offeredCourse_model_1.OfferedCourse.findById(payload.offeredCourse);
     if (!isOfferedCourseExist) {
@@ -28,7 +31,8 @@ const createEnrolledCourseIntoDb = (payload, id) => __awaiter(void 0, void 0, vo
     if (isOfferedCourseExist.maxCapacity <= 0) {
         throw new AppError_1.default(400, 'This course is full!');
     }
-    const student = yield student_schema_1.Student.findOne({ id }).select('_id');
+    const course = yield course_model_1.Course.findById(isOfferedCourseExist.course);
+    const student = yield student_schema_1.Student.findOne({ id }, { _id: 1 });
     if (!student) {
         throw new AppError_1.default(404, 'This student not exist!');
     }
@@ -39,6 +43,48 @@ const createEnrolledCourseIntoDb = (payload, id) => __awaiter(void 0, void 0, vo
     });
     if (isAlreadyEnrolled) {
         throw new AppError_1.default(400, 'You are already enrolled in this course');
+    }
+    /// check total credit exceeds maxcredit
+    const semesterRegistration = yield semesterRegistration_model_1.SemesterRegistration.findById(isOfferedCourseExist.semesterRegistration).select('maxCredit');
+    if (!semesterRegistration) {
+        throw new AppError_1.default(404, 'This Semester Registration not exist!');
+    }
+    const enrolledCourses = yield enrolledCourse_model_1.EnrolledCourse.aggregate([
+        {
+            $match: {
+                semesterRegistration: isOfferedCourseExist.semesterRegistration,
+                student: student._id,
+            },
+        },
+        {
+            $lookup: {
+                from: 'courses',
+                localField: 'course',
+                foreignField: '_id',
+                as: 'enrolledCoursesData',
+            },
+        },
+        {
+            $unwind: '$enrolledCoursesData',
+        },
+        {
+            $group: {
+                _id: null,
+                totalEnrolledCredits: { $sum: '$enrolledCoursesData.credits' },
+            },
+        },
+        {
+            $project: {
+                _id: 0,
+                totalEnrolledCredits: 1,
+            },
+        },
+    ]);
+    const totalCredits = ((_a = enrolledCourses[0]) === null || _a === void 0 ? void 0 : _a.totalEnrolledCredits) || 0;
+    // total enrolled credit + new enrolled course credit > maxCredit
+    if (totalCredits &&
+        totalCredits + (course === null || course === void 0 ? void 0 : course.credits) > semesterRegistration.maxCredit) {
+        throw new AppError_1.default(400, 'Total credit exceeds max credit');
     }
     const session = yield mongoose_1.default.startSession();
     try {
