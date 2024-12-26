@@ -5,7 +5,7 @@ export type ICourseMark = {
   classTest1: number;
   classTest2: number;
   midTerm: number;
-  finalExam: number;
+  finalTerm: number;
 };
 export type IEnrolledCourse = {
   semesterRegistration: Types.ObjectId;

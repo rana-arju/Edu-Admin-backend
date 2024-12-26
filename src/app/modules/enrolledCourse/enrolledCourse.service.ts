@@ -179,22 +179,18 @@ const updateEnrolledCourseIntoDb = async (
       modifiedCourseData[`courseMarks.${key}`] = value;
     }
   }
-  if (courseMarks?.finalExam) {
+  if (courseMarks?.finalTerm) {
     const { classTest1, classTest2, midTerm } =
       isTheCourseBelongsToFaculty.courseMarks;
 
-    const totalMarks = Math.ceil(
-      classTest1 * 0.1 +
-        classTest2 * 0.1 +
-        midTerm * 0.3 +
-        courseMarks?.finalExam * 0.3,
+    const totalMarks = Math.round(
+      classTest1 + classTest2 + midTerm + courseMarks?.finalTerm,
     );
     const result = calculateGradeAndPoints(totalMarks);
     modifiedCourseData.grade = result.grade;
     modifiedCourseData.gradePoints = result.gradePoints;
     modifiedCourseData.isCompleted = true;
 
-    console.log(result);
   }
 
   const result = await EnrolledCourse.findOneAndUpdate(
