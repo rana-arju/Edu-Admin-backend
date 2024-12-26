@@ -47,7 +47,8 @@ const getAllCourseFromDB = (query) => __awaiter(void 0, void 0, void 0, function
         .paginate()
         .fields();
     const result = yield courseQuery.modelQuery;
-    return result;
+    const meta = yield courseQuery.countTotal();
+    return { result, meta };
 });
 // Update single semester
 const updateSingleCourseIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
