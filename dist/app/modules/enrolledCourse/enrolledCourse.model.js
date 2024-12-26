@@ -4,10 +4,10 @@ exports.EnrolledCourse = void 0;
 const mongoose_1 = require("mongoose");
 const enrolledCourse_constant_1 = require("./enrolledCourse.constant");
 const courseMarkSchema = new mongoose_1.Schema({
-    classTest1: { type: Number, default: 0 },
-    classTest2: { type: Number, default: 0 },
-    midTerm: { type: Number, default: 0 },
-    finalExam: { type: Number, default: 0 },
+    classTest1: { type: Number, min: 0, max: 10, default: 0 },
+    classTest2: { type: Number, min: 0, max: 10, default: 0 },
+    midTerm: { type: Number, min: 0, max: 30, default: 0 },
+    finalExam: { type: Number, min: 0, max: 30, default: 0 },
 }, { _id: false });
 const enrolledCourseSchema = new mongoose_1.Schema({
     semesterRegistration: {

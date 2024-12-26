@@ -21,8 +21,16 @@ const student_schema_1 = require("../student/student.schema");
 const enrolledCourse_model_1 = require("./enrolledCourse.model");
 const semesterRegistration_model_1 = require("../semesterRegistration/semesterRegistration.model");
 const course_model_1 = require("../course/course.model");
+const faculty_schema_1 = require("../faculty/faculty.schema");
+const enrolledCourse_utils_1 = require("./enrolledCourse.utils");
 const createEnrolledCourseIntoDb = (payload, id) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
+    /**
+     * step 1: check offered course existence and semester registration
+     * step 2: check if the student is already enrolled in this course
+     * step 3: check total credit exceeds maxcredit
+     * step 4: create enrollments
+     */
     // check offered course existence and semester registration
     const isOfferedCourseExist = yield offeredCourse_model_1.OfferedCourse.findById(payload.offeredCourse);
     if (!isOfferedCourseExist) {
@@ -31,7 +39,6 @@ const createEnrolledCourseIntoDb = (payload, id) => __awaiter(void 0, void 0, vo
     if (isOfferedCourseExist.maxCapacity <= 0) {
         throw new AppError_1.default(400, 'This course is full!');
     }
-    const course = yield course_model_1.Course.findById(isOfferedCourseExist.course);
     const student = yield student_schema_1.Student.findOne({ id }, { _id: 1 });
     if (!student) {
         throw new AppError_1.default(404, 'This student not exist!');
@@ -82,6 +89,7 @@ const createEnrolledCourseIntoDb = (payload, id) => __awaiter(void 0, void 0, vo
     ]);
     const totalCredits = ((_a = enrolledCourses[0]) === null || _a === void 0 ? void 0 : _a.totalEnrolledCredits) || 0;
     // total enrolled credit + new enrolled course credit > maxCredit
+    const course = yield course_model_1.Course.findById(isOfferedCourseExist.course);
     if (totalCredits &&
         totalCredits + (course === null || course === void 0 ? void 0 : course.credits) > semesterRegistration.maxCredit) {
         throw new AppError_1.default(400, 'Total credit exceeds max credit');
@@ -115,6 +123,72 @@ const createEnrolledCourseIntoDb = (payload, id) => __awaiter(void 0, void 0, vo
         throw new Error(error);
     }
 });
+const updateEnrolledCourseIntoDb = (payload, id) => __awaiter(void 0, void 0, void 0, function* () {
+    const { offeredCourse, student, semesterRegistration, courseMarks } = payload;
+    const studentExist = yield student_schema_1.Student.findById(student, { _id: 1 });
+    if (!studentExist) {
+        throw new AppError_1.default(404, 'This student not exist!');
+    }
+    const isFaculty = yield faculty_schema_1.Faculty.findOne({ id }, { _id: 1 });
+    if (!isFaculty) {
+        throw new AppError_1.default(400, 'You can not access this resource');
+    }
+    const isTheCourseBelongsToFaculty = yield enrolledCourse_model_1.EnrolledCourse.findOne({
+        faculty: isFaculty._id,
+        semesterRegistration,
+        student,
+        offeredCourse,
+    });
+    if (!isTheCourseBelongsToFaculty) {
+        throw new AppError_1.default(400, 'You can not access this resource');
+    }
+    // check offered course existence and semester registration
+    const isOfferedCourseExist = yield offeredCourse_model_1.OfferedCourse.findById(offeredCourse);
+    if (!isOfferedCourseExist) {
+        throw new AppError_1.default(404, 'This Offered Course not exist!');
+    }
+    const isSemesterRegistrationExist = yield semesterRegistration_model_1.SemesterRegistration.findById(semesterRegistration);
+    if (!isSemesterRegistrationExist) {
+        throw new AppError_1.default(404, 'This Semester Registration not exist');
+    }
+    const isAlreadyEnrolled = yield enrolledCourse_model_1.EnrolledCourse.findOne({
+        offeredCourse: offeredCourse,
+        student,
+        semesterRegistration: semesterRegistration,
+    });
+    if (!isAlreadyEnrolled) {
+        throw new AppError_1.default(400, 'This course not enrolled by this user');
+    }
+    const modifiedCourseData = Object.assign({}, courseMarks);
+    if (courseMarks && Object.keys(courseMarks).length) {
+        for (const [key, value] of Object.entries(courseMarks)) {
+            modifiedCourseData[`courseMarks.${key}`] = value;
+        }
+    }
+    if (courseMarks === null || courseMarks === void 0 ? void 0 : courseMarks.finalExam) {
+        const { classTest1, classTest2, midTerm } = isTheCourseBelongsToFaculty.courseMarks;
+        const totalMarks = Math.ceil(classTest1 * 0.1 +
+            classTest2 * 0.1 +
+            midTerm * 0.3 +
+            (courseMarks === null || courseMarks === void 0 ? void 0 : courseMarks.finalExam) * 0.3);
+        const result = (0, enrolledCourse_utils_1.calculateGradeAndPoints)(totalMarks);
+        modifiedCourseData.grade = result.grade;
+        modifiedCourseData.gradePoints = result.gradePoints;
+        modifiedCourseData.isCompleted = true;
+        console.log(result);
+    }
+    const result = yield enrolledCourse_model_1.EnrolledCourse.findOneAndUpdate({
+        offeredCourse,
+        student,
+        semesterRegistration,
+        faculty: isFaculty._id,
+    }, modifiedCourseData, { new: true });
+    if (!result) {
+        throw new AppError_1.default(400, 'Failed to update course mark');
+    }
+    return result;
+});
 exports.enrolledCourseServices = {
     createEnrolledCourseIntoDb,
+    updateEnrolledCourseIntoDb,
 };

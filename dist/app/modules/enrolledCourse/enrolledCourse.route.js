@@ -12,4 +12,5 @@ const auth_1 = __importDefault(require("../../middleware/auth"));
 const user_constant_1 = require("../user/user.constant");
 const router = express_1.default.Router();
 router.post('/create-enrolled-course', (0, auth_1.default)(user_constant_1.USER_ROLE.student), (0, validedRequest_1.default)(enrolledCourse_validation_1.enrolledCourseValidation.createEnrolledCourseSchemaValidation), enrolledCourse_controller_1.enrolledCourseController.createEnrolledCourse);
+router.patch('/update-enrolled-course-marks', (0, auth_1.default)(user_constant_1.USER_ROLE.faculty), (0, validedRequest_1.default)(enrolledCourse_validation_1.enrolledCourseValidation.updateEnrolledCourseSchemaValidation), enrolledCourse_controller_1.enrolledCourseController.updateEnrolledCourse);
 exports.enrolledCourseRoutes = router;

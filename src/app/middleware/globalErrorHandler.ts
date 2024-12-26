@@ -49,11 +49,20 @@ export const globalErrorHandler: ErrorRequestHandler = (
     errorSources = simplifiedError?.errorSources;
   } else if (err.name === 'JsonWebTokenError') {
     statusCode = 401;
-    message = 'Invalid token. Please login again!';
+    message = 'Invalid token.';
     errorSources = [
       {
         path: '',
-        message: 'Invalid token. Please login again!',
+        message: 'Invalid token.',
+      },
+    ];
+  } else if (err.name === 'TokenExpiredError') {
+    statusCode = 401;
+    message = 'Please login again with your credentials';
+    errorSources = [
+      {
+        path: '',
+        message: 'Token expired',
       },
     ];
   } else if (err instanceof AppError) {

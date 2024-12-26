@@ -8,6 +8,21 @@ const createEnrolledCourseSchemaValidation = z.object({
   }),
 });
 
+const updateEnrolledCourseSchemaValidation = z.object({
+  body: z.object({
+    courseMarks: z.object({
+      classTest1: z.number().optional(),
+      classTest2: z.number().optional(),
+      midTerm: z.number().optional(),
+      finalExam: z.number().optional(),
+    }),
+    semesterRegistration: z.string(),
+    offeredCourse: z.string(),
+    student: z.string(),
+  }),
+});
+
 export const enrolledCourseValidation = {
   createEnrolledCourseSchemaValidation,
+  updateEnrolledCourseSchemaValidation,
 };

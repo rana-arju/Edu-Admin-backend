@@ -5,12 +5,28 @@ import { enrolledCourseServices } from './enrolledCourse.service';
 const createEnrolledCourse = catchAsync(async (req, res) => {
   const id = req?.user?.userId;
   const payload = req.body;
-
-  
-  
   // will call service func to send this data
-  const result = await enrolledCourseServices.createEnrolledCourseIntoDb(
-  payload, id
+  const result = await enrolledCourseServices.updateEnrolledCourseIntoDb(
+    payload,
+    id,
+  );
+
+  // send response
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 201,
+    message: 'Course enrolled successfully',
+    data: result,
+  });
+});
+const updateEnrolledCourse = catchAsync(async (req, res) => {
+  const id = req?.user?.userId;
+  const payload = req.body;
+  // will call service func to send this data
+  const result = await enrolledCourseServices.updateEnrolledCourseIntoDb(
+    payload,
+    id,
   );
 
   // send response
@@ -18,11 +34,12 @@ const createEnrolledCourse = catchAsync(async (req, res) => {
   sendResponse(res, {
     success: true,
     statusCode: 200,
-    message: 'Course enrolled succesful',
+    message: 'student course mark updated succesful',
     data: result,
   });
 });
 
 export const enrolledCourseController = {
   createEnrolledCourse,
+  updateEnrolledCourse,
 };

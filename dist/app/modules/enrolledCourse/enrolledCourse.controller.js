@@ -21,15 +21,30 @@ const createEnrolledCourse = (0, catchAsync_1.default)((req, res) => __awaiter(v
     const id = (_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a.userId;
     const payload = req.body;
     // will call service func to send this data
-    const result = yield enrolledCourse_service_1.enrolledCourseServices.createEnrolledCourseIntoDb(payload, id);
+    const result = yield enrolledCourse_service_1.enrolledCourseServices.updateEnrolledCourseIntoDb(payload, id);
+    // send response
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: 201,
+        message: 'Course enrolled successfully',
+        data: result,
+    });
+}));
+const updateEnrolledCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const id = (_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a.userId;
+    const payload = req.body;
+    // will call service func to send this data
+    const result = yield enrolledCourse_service_1.enrolledCourseServices.updateEnrolledCourseIntoDb(payload, id);
     // send response
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: 200,
-        message: 'Course enrolled succesful',
+        message: 'student course mark updated succesful',
         data: result,
     });
 }));
 exports.enrolledCourseController = {
     createEnrolledCourse,
+    updateEnrolledCourse,
 };

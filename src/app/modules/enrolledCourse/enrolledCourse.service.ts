@@ -7,11 +7,19 @@ import { IEnrolledCourse } from './enrolledCourse.interface';
 import { EnrolledCourse } from './enrolledCourse.model';
 import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
 import { Course } from '../course/course.model';
+import { Faculty } from '../faculty/faculty.schema';
+import { calculateGradeAndPoints } from './enrolledCourse.utils';
 
 const createEnrolledCourseIntoDb = async (
   payload: IEnrolledCourse,
   id: string,
 ) => {
+  /**
+   * step 1: check offered course existence and semester registration
+   * step 2: check if the student is already enrolled in this course
+   * step 3: check total credit exceeds maxcredit
+   * step 4: create enrollments
+   */
   // check offered course existence and semester registration
   const isOfferedCourseExist = await OfferedCourse.findById(
     payload.offeredCourse,
@@ -22,7 +30,6 @@ const createEnrolledCourseIntoDb = async (
   if (isOfferedCourseExist.maxCapacity <= 0) {
     throw new AppError(400, 'This course is full!');
   }
-  const course = await Course.findById(isOfferedCourseExist.course);
   const student = await Student.findOne({ id }, { _id: 1 });
   if (!student) {
     throw new AppError(404, 'This student not exist!');
@@ -77,6 +84,7 @@ const createEnrolledCourseIntoDb = async (
   ]);
   const totalCredits = enrolledCourses[0]?.totalEnrolledCredits || 0;
   // total enrolled credit + new enrolled course credit > maxCredit
+  const course = await Course.findById(isOfferedCourseExist.course);
 
   if (
     totalCredits &&
@@ -119,6 +127,92 @@ const createEnrolledCourseIntoDb = async (
   }
 };
 
+const updateEnrolledCourseIntoDb = async (
+  payload: Partial<IEnrolledCourse>,
+  id: string,
+) => {
+  const { offeredCourse, student, semesterRegistration, courseMarks } = payload;
+
+  const studentExist = await Student.findById(student, { _id: 1 });
+
+  if (!studentExist) {
+    throw new AppError(404, 'This student not exist!');
+  }
+  const isFaculty = await Faculty.findOne({ id }, { _id: 1 });
+
+  if (!isFaculty) {
+    throw new AppError(400, 'You can not access this resource');
+  }
+  const isTheCourseBelongsToFaculty = await EnrolledCourse.findOne({
+    faculty: isFaculty._id,
+    semesterRegistration,
+    student,
+    offeredCourse,
+  });
+  if (!isTheCourseBelongsToFaculty) {
+    throw new AppError(400, 'You can not access this resource');
+  }
+  // check offered course existence and semester registration
+  const isOfferedCourseExist = await OfferedCourse.findById(offeredCourse);
+  if (!isOfferedCourseExist) {
+    throw new AppError(404, 'This Offered Course not exist!');
+  }
+
+  const isSemesterRegistrationExist =
+    await SemesterRegistration.findById(semesterRegistration);
+  if (!isSemesterRegistrationExist) {
+    throw new AppError(404, 'This Semester Registration not exist');
+  }
+  const isAlreadyEnrolled = await EnrolledCourse.findOne({
+    offeredCourse: offeredCourse,
+    student,
+    semesterRegistration: semesterRegistration,
+  });
+  if (!isAlreadyEnrolled) {
+    throw new AppError(400, 'This course not enrolled by this user');
+  }
+  const modifiedCourseData: Record<string, unknown> = {
+    ...courseMarks,
+  };
+  if (courseMarks && Object.keys(courseMarks).length) {
+    for (const [key, value] of Object.entries(courseMarks)) {
+      modifiedCourseData[`courseMarks.${key}`] = value;
+    }
+  }
+  if (courseMarks?.finalExam) {
+    const { classTest1, classTest2, midTerm } =
+      isTheCourseBelongsToFaculty.courseMarks;
+
+    const totalMarks = Math.ceil(
+      classTest1 * 0.1 +
+        classTest2 * 0.1 +
+        midTerm * 0.3 +
+        courseMarks?.finalExam * 0.3,
+    );
+    const result = calculateGradeAndPoints(totalMarks);
+    modifiedCourseData.grade = result.grade;
+    modifiedCourseData.gradePoints = result.gradePoints;
+    modifiedCourseData.isCompleted = true;
+
+    console.log(result);
+  }
+
+  const result = await EnrolledCourse.findOneAndUpdate(
+    {
+      offeredCourse,
+      student,
+      semesterRegistration,
+      faculty: isFaculty._id,
+    },
+    modifiedCourseData,
+    { new: true },
+  );
+  if (!result) {
+    throw new AppError(400, 'Failed to update course mark');
+  }
+  return result;
+};
 export const enrolledCourseServices = {
   createEnrolledCourseIntoDb,
+  updateEnrolledCourseIntoDb,
 };
