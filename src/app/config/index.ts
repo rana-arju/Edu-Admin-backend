@@ -19,4 +19,5 @@ export default {
   cloudinary_api: process.env.CLOUDINARY_API_KEY,
   cloudinary_cloude_name: process.env.CLOUDINARY_cLOUDE_NAME,
   cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET,
+  super_admin_password: process.env.SUPER_ADMIN_PASSWORD,
 };

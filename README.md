@@ -8,7 +8,7 @@ The Edu Management System is a comprehensive backend solution designed to manage
 
 ## Live API URL
 
-<https://eduadmin.vercel.app />
+https://eduadmin.vercel.app
 
 # or
 
@@ -21,10 +21,13 @@ https://eduadmin.vercel.app/
 [![Edu Management System](https://res.cloudinary.com/demo/image/upload/v1734604071/university_management.png)](https://youtu.be/your-video-link)
 
 ## Project Requirements:
-    [Requirement](https://docs.google.com/document/d/1i0rA5IoravnEskmMqcaAEvIIya_kYPIr-13RJO2wyhI/edit?usp=sharing)
+
+[Requirement](https://docs.google.com/document/d/1i0rA5IoravnEskmMqcaAEvIIya_kYPIr-13RJO2wyhI/edit?usp=sharing)
 
 ## ER Diagram
+
 ![ER Diagram](https://res.cloudinary.com/db8l1ulfq/image/upload/v1735302369/erdiagram_f4wcqx.png)
+
 ### Technologies Used
 
 - **TypeScript**: Strong typing and enhanced developer experience.
@@ -40,22 +43,22 @@ To run this project, you will need to add the following environment variables to
 
 DATABASE_URL =
 
-BCRYPT_SALT_ROUNDS= 
-DEFAULT_PASSWORD = 
+BCRYPT_SALT_ROUNDS=
+DEFAULT_PASSWORD =
 
-JWT_ACCESS_TOKEN= 
-REFRESH_TOKEN= 
+JWT_ACCESS_TOKEN=
+REFRESH_TOKEN=
 
-JWT_ACCESS_EXPIRES = 
+JWT_ACCESS_EXPIRES =
 REFRESH_ACCESS_EXPIRES =
 
 RESET_LIVE_URL =
-EMAIL_USER=  
-EMAIL_PASSWORD= 
+EMAIL_USER=
+EMAIL_PASSWORD=
 
-CLOUDINARY_API_KEY=  
-CLOUDINARY_cLOUDE_NAME= 
-CLOUDINARY_API_SECRET=  
+CLOUDINARY_API_KEY=
+CLOUDINARY_cLOUDE_NAME=
+CLOUDINARY_API_SECRET=
 ```
 
 ## Admin Login Credentials

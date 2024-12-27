@@ -25,7 +25,10 @@ const userSchema = new Schema<IUser, UserModel>(
       enum: ['in-progress', 'blocked'],
       default: 'in-progress',
     },
-    role: { type: String, enum: ['faculty', 'student', 'admin'] },
+    role: {
+      type: String,
+      enum: ['faculty', 'student', 'admin', 'super-admin'],
+    },
     isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true },

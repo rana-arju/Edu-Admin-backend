@@ -190,7 +190,6 @@ const updateEnrolledCourseIntoDb = async (
     modifiedCourseData.grade = result.grade;
     modifiedCourseData.gradePoints = result.gradePoints;
     modifiedCourseData.isCompleted = true;
-
   }
 
   const result = await EnrolledCourse.findOneAndUpdate(
