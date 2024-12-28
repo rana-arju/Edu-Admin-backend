@@ -11,8 +11,8 @@ const validedRequest_1 = __importDefault(require("../../middleware/validedReques
 const auth_1 = __importDefault(require("../../middleware/auth"));
 const user_constant_1 = require("../user/user.constant");
 const router = express_1.default.Router();
-router.get('/:id', faculty_controller_1.FacultyControllers.getSingleFaculty);
-router.patch('/:id', (0, validedRequest_1.default)(faculty_validation_1.updateFacultyValidationSchema), faculty_controller_1.FacultyControllers.updateFaculty);
-router.delete('/:id', faculty_controller_1.FacultyControllers.deleteFaculty);
-router.get('/', (0, auth_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.faculty), faculty_controller_1.FacultyControllers.getAllFaculties);
+router.get('/:id', (0, auth_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.faculty, user_constant_1.USER_ROLE.superAdmin), faculty_controller_1.FacultyControllers.getSingleFaculty);
+router.patch('/:id', (0, auth_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.superAdmin), (0, validedRequest_1.default)(faculty_validation_1.updateFacultyValidationSchema), faculty_controller_1.FacultyControllers.updateFaculty);
+router.delete('/:id', (0, auth_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.superAdmin), faculty_controller_1.FacultyControllers.deleteFaculty);
+router.get('/', (0, auth_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.faculty, user_constant_1.USER_ROLE.superAdmin), faculty_controller_1.FacultyControllers.getAllFaculties);
 exports.FacultyRoutes = router;

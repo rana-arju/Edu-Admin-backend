@@ -17,6 +17,13 @@ const getSingleCourseFromDB = async (id: string) => {
   );
   return result;
 };
+// Get course faculty information
+const getCourseFacultyFromDB = async (id: string) => {
+  const result = await CourseFaculty.findOne({ course: id }).populate(
+    'faculties',
+  );
+  return result;
+};
 // Get all semester
 const getAllCourseFromDB = async (query: Record<string, unknown>) => {
   const courseQuery = new QueryBuilder(
@@ -148,4 +155,5 @@ export const courseServices = {
   getAllCourseFromDB,
   facultiesAssignIntoDB,
   facultyRemoveFromDB,
+  getCourseFacultyFromDB,
 };

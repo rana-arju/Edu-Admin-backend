@@ -5,4 +5,5 @@ exports.USER_ROLE = {
     student: 'student',
     faculty: 'faculty',
     admin: 'admin',
+    superAdmin: 'superAdmin',
 };

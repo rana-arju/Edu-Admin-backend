@@ -15,11 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
 const config_1 = __importDefault(require("./app/config"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const DB_1 = __importDefault(require("./app/DB"));
 let server;
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield mongoose_1.default.connect(config_1.default.database_url);
+            (0, DB_1.default)();
             server = app_1.default.listen(config_1.default.port, () => {
                 console.log(`Server is Running with port of ${config_1.default.port}`);
             });

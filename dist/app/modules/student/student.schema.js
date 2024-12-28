@@ -100,7 +100,10 @@ const studentSchema = new mongoose_1.Schema({
         type: userNameSchema,
         required: [true, 'Name field is required.'],
     },
-    profileImg: String,
+    profileImg: {
+        type: String,
+        default: '',
+    },
     email: {
         type: String,
         trim: true,
@@ -157,6 +160,10 @@ const studentSchema = new mongoose_1.Schema({
     academicDepartment: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'AcademicDepartment',
+    },
+    academicFaculty: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'AcademicFaculty',
     },
     isDeleted: {
         type: Boolean,

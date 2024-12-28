@@ -41,6 +41,7 @@ export type IStudent = {
   parmanentAddress: string;
   admissionSemester: Types.ObjectId;
   academicDepartment: Types.ObjectId;
+  academicFaculty: Types.ObjectId;
   guardian: IGuardian;
   localGuardian: ILocalGuardian;
   isDeleted?: boolean;
@@ -52,17 +53,3 @@ export interface StudentModel extends Model<IStudent> {
   // eslint-disable-next-line no-unused-vars
   isUserExists(id: string): Promise<IStudent | null>;
 }
-
-// for creating instance
-/*
-export type IStudentMethods = {
-  isUserExists(id: string): Promise<TStudent | null>;
-};
-
-// Create a new Model type that knows about IStudentMethod...
-export type StudentModel = Model<
-  TStudent,
-  Record<string, never>,
-  IStudentMethods
->;
-*/

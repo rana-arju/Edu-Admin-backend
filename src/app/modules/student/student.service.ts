@@ -7,65 +7,6 @@ import QueryBuilder from '../../builder/QueryBuilder';
 import { studentSearchableField } from './student.constant';
 
 const getAllStudentFromDB = async (query: Record<string, unknown>) => {
-  /*
-  let searchTerm = '';
- 
-  if (query?.searchTerm) {
-    searchTerm = query.searchTerm as string;
-  }
-
-  const objectQuery = { ...query };
-
-  const excludeField = ['searchTerm', 'sort', 'limit',"page", "fields"];
-  excludeField.forEach((el) => delete objectQuery[el]);
-
-  const searchQuery = Student.find({
-    $or: studentSearchableField.map((field) => ({
-      [field]: { $regex: searchTerm, $options: 'i' },
-    })),
-  });
-
-  const filterQuery = searchQuery
-    .find(objectQuery)
-    .populate('user')
-    .populate('admissionSemester')
-    .populate({
-      path: 'academicDepartment',
-      populate: {
-        path: 'academicFaculty',
-      },
-    });
-
-  let sort = '-createdAt';
-  if (query?.sort) {
-    sort = query.sort as string;
-  }
-  const sortQuery = filterQuery.sort(sort);
-  let page = 1;
-  let skip = 0;
-  let limit = 10;
-
-  if (query?.limit) {
-    limit = Number(query.limit);
-  }
-  if (query?.page) {
-    page = Number(query.page);
-    skip = (page - 1) * limit;
-  }
-
-  const paginateQuery = sortQuery.skip(skip);
-  const limitQuery = paginateQuery.limit(limit);
-
-  // fields limiting
-  let fields = '__v';
-  if (query?.fields) {
-    fields = (query.fields as string).split(',').join(' ');
-  }
-  const fieldsQuery = await limitQuery.select(fields);
-
-  return fieldsQuery;
-  */
-
   const studentQuery = new QueryBuilder(
     Student.find()
       .populate('user')

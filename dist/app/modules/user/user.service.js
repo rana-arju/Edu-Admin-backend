@@ -33,6 +33,12 @@ const createStudentIntoDB = (password, payload, file) => __awaiter(void 0, void 
     userData.role = 'student';
     // set student email
     userData.email = payload.email;
+    // find academic department info
+    const acedemicDepartmentExist = yield academicDepartment_model_1.AcademicDepartment.findById(payload.academicDepartment);
+    if (!acedemicDepartmentExist) {
+        throw new AppError_1.default(400, 'Invalid academic department');
+    }
+    payload.academicFaculty = acedemicDepartmentExist.academicFaculty;
     // find academic semester info
     const admissionSemesterId = yield academicSemester_model_1.AcademicSemester.findById(payload.admissionSemester);
     if (!admissionSemesterId) {
@@ -44,14 +50,16 @@ const createStudentIntoDB = (password, payload, file) => __awaiter(void 0, void 
         userData.id = yield (0, user_utils_1.generateStudent)(admissionSemesterId);
         // Create user (transetion - 1)
         const imageName = `${userData.id}${(_a = payload === null || payload === void 0 ? void 0 : payload.name) === null || _a === void 0 ? void 0 : _a.firstName}`;
-        const image = (yield (0, sendImageToCloudinary_1.sendImageToCloudinaryService)(file === null || file === void 0 ? void 0 : file.path, imageName));
+        if (file) {
+            const image = (yield (0, sendImageToCloudinary_1.sendImageToCloudinaryService)(file === null || file === void 0 ? void 0 : file.path, imageName));
+            payload.profileImg = image === null || image === void 0 ? void 0 : image.secure_url;
+        }
         const newUser = yield user_model_1.User.create([userData], { session });
         if (!newUser.length) {
             throw new AppError_1.default(400, 'Failed to create user');
         }
         payload.id = newUser[0].id;
         payload.user = newUser[0]._id;
-        payload.profileImg = image === null || image === void 0 ? void 0 : image.secure_url;
         // create student (transection - 2)
         const newStudent = yield student_schema_1.Student.create([payload], { session });
         if (!newStudent.length) {
@@ -66,12 +74,6 @@ const createStudentIntoDB = (password, payload, file) => __awaiter(void 0, void 
         yield session.endSession();
         throw error;
     }
-    /*
-    const student = new Student(studentData);
-    if (await student.isUserExists(studentData.id)) {
-      throw new Error('User already exists.');
-    }
-  */
     // const result = await student.save(); // build in instance method provided by mongoose
 });
 const createFacultyIntoDB = (password, payload, file) => __awaiter(void 0, void 0, void 0, function* () {
@@ -89,6 +91,7 @@ const createFacultyIntoDB = (password, payload, file) => __awaiter(void 0, void 
     if (!academicDepartment) {
         throw new AppError_1.default(400, 'Academic department not found');
     }
+    payload.academicFaculty = academicDepartment === null || academicDepartment === void 0 ? void 0 : academicDepartment.academicFaculty;
     const session = yield mongoose_1.default.startSession();
     try {
         session.startTransaction();
@@ -105,8 +108,10 @@ const createFacultyIntoDB = (password, payload, file) => __awaiter(void 0, void 
         payload.user = newUser[0]._id; //reference _id
         // create a faculty (transaction-2)
         const imageName = `${userData.id}${(_a = payload === null || payload === void 0 ? void 0 : payload.name) === null || _a === void 0 ? void 0 : _a.firstName}`;
-        const image = (yield (0, sendImageToCloudinary_1.sendImageToCloudinaryService)(file === null || file === void 0 ? void 0 : file.path, imageName));
-        payload.profileImg = image === null || image === void 0 ? void 0 : image.secure_url;
+        if (file) {
+            const image = (yield (0, sendImageToCloudinary_1.sendImageToCloudinaryService)(file === null || file === void 0 ? void 0 : file.path, imageName));
+            payload.profileImg = image === null || image === void 0 ? void 0 : image.secure_url;
+        }
         const newFaculty = yield faculty_schema_1.Faculty.create([payload], { session });
         if (!newFaculty.length) {
             throw new AppError_1.default(400, 'Failed to create faculty');
@@ -147,8 +152,10 @@ const createAdminIntoDB = (password, payload, file) => __awaiter(void 0, void 0,
         payload.user = newUser[0]._id; //reference _id
         // create a admin (transaction-2)
         const imageName = `${userData.id}${(_a = payload === null || payload === void 0 ? void 0 : payload.name) === null || _a === void 0 ? void 0 : _a.firstName}`;
-        const image = (yield (0, sendImageToCloudinary_1.sendImageToCloudinaryService)(file === null || file === void 0 ? void 0 : file.path, imageName));
-        payload.profileImg = image === null || image === void 0 ? void 0 : image.secure_url;
+        if (file) {
+            const image = (yield (0, sendImageToCloudinary_1.sendImageToCloudinaryService)(file === null || file === void 0 ? void 0 : file.path, imageName));
+            payload.profileImg = image === null || image === void 0 ? void 0 : image.secure_url;
+        }
         const newAdmin = yield admin_schema_1.Admin.create([payload], { session });
         if (!newAdmin.length) {
             throw new AppError_1.default(400, 'Failed to create admin');

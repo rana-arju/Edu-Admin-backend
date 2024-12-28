@@ -8,7 +8,7 @@ type IAcademicSemesterNameCodeMapper = {
 const academicSemesterNameCodeMapper: IAcademicSemesterNameCodeMapper = {
   Autumn: '01',
   Summer: '02',
-  Fall: '02',
+  Fall: '03',
 };
 const createAcademicSemesterIntoDb = async (payload: IAcademicSemester) => {
   if (academicSemesterNameCodeMapper[payload.name] !== payload.code) {

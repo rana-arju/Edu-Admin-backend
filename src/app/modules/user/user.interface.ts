@@ -9,7 +9,7 @@ export interface IUser {
   needsPasswordChange: boolean;
   passwordChangeTime?: Date;
   status: 'in-progress' | 'blocked';
-  role: 'faculty' | 'student' | 'admin' | 'super-admin';
+  role: 'faculty' | 'student' | 'admin' | 'superAdmin';
   isDeleted: boolean;
 }
 export interface UserModel extends Model<IUser> {

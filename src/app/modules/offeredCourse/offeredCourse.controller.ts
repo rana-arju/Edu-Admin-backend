@@ -52,9 +52,27 @@ const getSingleOfferedCourse = catchAsync(async (req, res) => {
     data: result,
   });
 });
-const getAllOfferedCourse = catchAsync(async (req, res) => {
+
+const getMyOfferedCourse = catchAsync(async (req, res) => {
+  const id = req?.user?.userId;
+
   // will call service func to send this data
-  const result = await offeredCourseServices.getAllOfferedCourseFromDB();
+  const result = await offeredCourseServices.getMyOfferedCourseFromDB(id);
+
+  // send response
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Your offered Course get succesfully',
+    data: result,
+  });
+});
+const getAllOfferedCourse = catchAsync(async (req, res) => {
+  const searchTerm = req.query;
+  // will call service func to send this data
+  const result =
+    await offeredCourseServices.getAllOfferedCourseFromDB(searchTerm);
 
   // send response
 
@@ -82,4 +100,5 @@ export const offeredCourseController = {
   getSingleOfferedCourse,
   getAllOfferedCourse,
   deleteOfferedCourseFromDB,
+  getMyOfferedCourse,
 };

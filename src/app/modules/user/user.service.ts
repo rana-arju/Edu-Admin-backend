@@ -31,6 +31,14 @@ const createStudentIntoDB = async (
   // set student email
   userData.email = payload.email;
 
+  // find academic department info
+  const acedemicDepartmentExist = await AcademicDepartment.findById(
+    payload.academicDepartment,
+  );
+  if (!acedemicDepartmentExist) {
+    throw new AppError(400, 'Invalid academic department');
+  }
+  payload.academicFaculty = acedemicDepartmentExist.academicFaculty;
   // find academic semester info
   const admissionSemesterId = await AcademicSemester.findById(
     payload.admissionSemester,
@@ -38,16 +46,22 @@ const createStudentIntoDB = async (
   if (!admissionSemesterId) {
     throw new AppError(400, 'Invalid admission semester');
   }
+
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
     userData.id = await generateStudent(admissionSemesterId);
     // Create user (transetion - 1)
     const imageName = `${userData.id}${payload?.name?.firstName}`;
-    const image = (await sendImageToCloudinaryService(
-      file?.path,
-      imageName,
-    )) as { secure_url: string };
+    if (file) {
+      const image = (await sendImageToCloudinaryService(
+        file?.path,
+        imageName,
+      )) as {
+        secure_url: string;
+      };
+      payload.profileImg = image?.secure_url;
+    }
 
     const newUser = await User.create([userData], { session });
     if (!newUser.length) {
@@ -55,7 +69,6 @@ const createStudentIntoDB = async (
     }
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id;
-    payload.profileImg = image?.secure_url;
     // create student (transection - 2)
     const newStudent = await Student.create([payload], { session });
     if (!newStudent.length) {
@@ -69,13 +82,6 @@ const createStudentIntoDB = async (
     await session.endSession();
     throw error;
   }
-
-  /*
-  const student = new Student(studentData);
-  if (await student.isUserExists(studentData.id)) {
-    throw new Error('User already exists.');
-  }
-*/
 
   // const result = await student.save(); // build in instance method provided by mongoose
 };
@@ -104,6 +110,7 @@ const createFacultyIntoDB = async (
   if (!academicDepartment) {
     throw new AppError(400, 'Academic department not found');
   }
+  payload.academicFaculty = academicDepartment?.academicFaculty;
 
   const session = await mongoose.startSession();
 
@@ -125,13 +132,16 @@ const createFacultyIntoDB = async (
 
     // create a faculty (transaction-2)
     const imageName = `${userData.id}${payload?.name?.firstName}`;
-    const image = (await sendImageToCloudinaryService(
-      file?.path,
-      imageName,
-    )) as {
-      secure_url: string;
-    };
-    payload.profileImg = image?.secure_url;
+    if (file) {
+      const image = (await sendImageToCloudinaryService(
+        file?.path,
+        imageName,
+      )) as {
+        secure_url: string;
+      };
+      payload.profileImg = image?.secure_url;
+    }
+
     const newFaculty = await Faculty.create([payload], { session });
 
     if (!newFaculty.length) {
@@ -185,13 +195,16 @@ const createAdminIntoDB = async (
 
     // create a admin (transaction-2)
     const imageName = `${userData.id}${payload?.name?.firstName}`;
-    const image = (await sendImageToCloudinaryService(
-      file?.path,
-      imageName,
-    )) as {
-      secure_url: string;
-    };
-    payload.profileImg = image?.secure_url;
+    if (file) {
+      const image = (await sendImageToCloudinaryService(
+        file?.path,
+        imageName,
+      )) as {
+        secure_url: string;
+      };
+      payload.profileImg = image?.secure_url;
+    }
+
     const newAdmin = await Admin.create([payload], { session });
 
     if (!newAdmin.length) {

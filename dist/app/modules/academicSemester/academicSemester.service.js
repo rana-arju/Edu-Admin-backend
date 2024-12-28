@@ -14,7 +14,7 @@ const academicSemester_model_1 = require("./academicSemester.model");
 const academicSemesterNameCodeMapper = {
     Autumn: '01',
     Summer: '02',
-    Fall: '02',
+    Fall: '03',
 };
 const createAcademicSemesterIntoDb = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     if (academicSemesterNameCodeMapper[payload.name] !== payload.code) {

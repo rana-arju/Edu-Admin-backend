@@ -11,7 +11,7 @@ cloudinary.config({
 export const sendImageToCloudinaryService = (
   path: string,
   imageName: string,
-) => {
+): Promise<Record<string, unknown>> => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
       path,
@@ -20,7 +20,11 @@ export const sendImageToCloudinaryService = (
         if (error) {
           reject(error);
         }
-        resolve(result);
+        if (result) {
+          resolve(result);
+        } else {
+          reject(new Error('Upload result is undefined'));
+        }
         // delete a file asynchronously
         fs.unlink(path, (err) => {
           if (err) {

@@ -165,17 +165,13 @@ const updateEnrolledCourseIntoDb = (payload, id) => __awaiter(void 0, void 0, vo
             modifiedCourseData[`courseMarks.${key}`] = value;
         }
     }
-    if (courseMarks === null || courseMarks === void 0 ? void 0 : courseMarks.finalExam) {
+    if (courseMarks === null || courseMarks === void 0 ? void 0 : courseMarks.finalTerm) {
         const { classTest1, classTest2, midTerm } = isTheCourseBelongsToFaculty.courseMarks;
-        const totalMarks = Math.ceil(classTest1 * 0.1 +
-            classTest2 * 0.1 +
-            midTerm * 0.3 +
-            (courseMarks === null || courseMarks === void 0 ? void 0 : courseMarks.finalExam) * 0.3);
+        const totalMarks = Math.round(classTest1 + classTest2 + midTerm + (courseMarks === null || courseMarks === void 0 ? void 0 : courseMarks.finalTerm));
         const result = (0, enrolledCourse_utils_1.calculateGradeAndPoints)(totalMarks);
         modifiedCourseData.grade = result.grade;
         modifiedCourseData.gradePoints = result.gradePoints;
         modifiedCourseData.isCompleted = true;
-        console.log(result);
     }
     const result = yield enrolledCourse_model_1.EnrolledCourse.findOneAndUpdate({
         offeredCourse,

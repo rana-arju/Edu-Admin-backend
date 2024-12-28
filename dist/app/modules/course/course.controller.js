@@ -39,6 +39,18 @@ const getSingleCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0
         data: result,
     });
 }));
+const getCourseFaculty = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    // will call service func to send this data
+    const result = yield course_service_1.courseServices.getCourseFacultyFromDB(id);
+    // send response
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: 200,
+        message: 'Course faculty get succesful',
+        data: result,
+    });
+}));
 const getAllCourses = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const query = req.query;
     // will call service func to send this data
@@ -112,4 +124,5 @@ exports.courseController = {
     getAllCourses,
     assignFaculties,
     removeFacultyFromCourse,
+    getCourseFaculty,
 };

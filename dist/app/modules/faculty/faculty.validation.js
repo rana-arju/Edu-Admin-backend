@@ -29,7 +29,7 @@ exports.createFacultyValidationSchema = zod_1.z.object({
             presentAddress: zod_1.z.string(),
             permanentAddress: zod_1.z.string(),
             academicDepartment: zod_1.z.string(),
-            profileImg: zod_1.z.string(),
+            profileImg: zod_1.z.string().optional(),
         }),
     }),
 });

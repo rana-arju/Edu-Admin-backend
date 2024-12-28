@@ -15,7 +15,7 @@ const updateEnrolledCourseSchemaValidation = zod_1.z.object({
             classTest1: zod_1.z.number().optional(),
             classTest2: zod_1.z.number().optional(),
             midTerm: zod_1.z.number().optional(),
-            finalExam: zod_1.z.number().optional(),
+            finalTerm: zod_1.z.number().optional(),
         }),
         semesterRegistration: zod_1.z.string(),
         offeredCourse: zod_1.z.string(),

@@ -98,7 +98,10 @@ const studentSchema = new Schema<IStudent, StudentModel>(
       type: userNameSchema,
       required: [true, 'Name field is required.'],
     },
-    profileImg: String,
+    profileImg: {
+      type: String,
+      default: '',
+    },
     email: {
       type: String,
       trim: true,
@@ -155,6 +158,10 @@ const studentSchema = new Schema<IStudent, StudentModel>(
     academicDepartment: {
       type: Schema.Types.ObjectId,
       ref: 'AcademicDepartment',
+    },
+    academicFaculty: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicFaculty',
     },
     isDeleted: {
       type: Boolean,

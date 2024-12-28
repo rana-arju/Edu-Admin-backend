@@ -38,6 +38,11 @@ const getSingleCourseFromDB = (id) => __awaiter(void 0, void 0, void 0, function
     const result = yield course_model_1.Course.findById(id).populate('preRequisiteCourses.course');
     return result;
 });
+// Get course faculty information
+const getCourseFacultyFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield course_model_1.CourseFaculty.findOne({ course: id }).populate('faculties');
+    return result;
+});
 // Get all semester
 const getAllCourseFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
     const courseQuery = new QueryBuilder_1.default(course_model_1.Course.find().populate('preRequisiteCourses.course'), query)
@@ -123,4 +128,5 @@ exports.courseServices = {
     getAllCourseFromDB,
     facultiesAssignIntoDB,
     facultyRemoveFromDB,
+    getCourseFacultyFromDB,
 };

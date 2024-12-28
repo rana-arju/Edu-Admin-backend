@@ -6,7 +6,7 @@ const createEnrolledCourse = catchAsync(async (req, res) => {
   const id = req?.user?.userId;
   const payload = req.body;
   // will call service func to send this data
-  const result = await enrolledCourseServices.updateEnrolledCourseIntoDb(
+  const result = await enrolledCourseServices.createEnrolledCourseIntoDb(
     payload,
     id,
   );

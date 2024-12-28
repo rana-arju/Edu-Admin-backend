@@ -2,6 +2,8 @@ import express from 'express';
 import validationRequest from '../../middleware/validedRequest';
 import { academicDepartmentController } from './academicDepartment.controller';
 import { AcademicDepartmentValidation } from './academicDepartment.validation';
+import auth from '../../middleware/auth';
+import { USER_ROLE } from '../user/user.constant';
 
 const router = express.Router();
 
@@ -12,6 +14,7 @@ router.get(
 
 router.post(
   '/create-academic-department',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validationRequest(
     AcademicDepartmentValidation.CreateAcademicDepartmentSchemaValidation,
   ),

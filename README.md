@@ -4,7 +4,7 @@ The Edu Management System is a comprehensive backend solution designed to manage
 
 ## Developer
 
-- [@Rana Arju](https://your-portfolio-link.com)
+- [@Rana Arju](https://rana-arju.vercel.app/)
 
 ## Live API URL
 

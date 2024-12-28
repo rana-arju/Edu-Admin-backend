@@ -31,64 +31,6 @@ const user_model_1 = require("../user/user.model");
 const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const student_constant_1 = require("./student.constant");
 const getAllStudentFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    /*
-    let searchTerm = '';
-   
-    if (query?.searchTerm) {
-      searchTerm = query.searchTerm as string;
-    }
-  
-    const objectQuery = { ...query };
-  
-    const excludeField = ['searchTerm', 'sort', 'limit',"page", "fields"];
-    excludeField.forEach((el) => delete objectQuery[el]);
-  
-    const searchQuery = Student.find({
-      $or: studentSearchableField.map((field) => ({
-        [field]: { $regex: searchTerm, $options: 'i' },
-      })),
-    });
-  
-    const filterQuery = searchQuery
-      .find(objectQuery)
-      .populate('user')
-      .populate('admissionSemester')
-      .populate({
-        path: 'academicDepartment',
-        populate: {
-          path: 'academicFaculty',
-        },
-      });
-  
-    let sort = '-createdAt';
-    if (query?.sort) {
-      sort = query.sort as string;
-    }
-    const sortQuery = filterQuery.sort(sort);
-    let page = 1;
-    let skip = 0;
-    let limit = 10;
-  
-    if (query?.limit) {
-      limit = Number(query.limit);
-    }
-    if (query?.page) {
-      page = Number(query.page);
-      skip = (page - 1) * limit;
-    }
-  
-    const paginateQuery = sortQuery.skip(skip);
-    const limitQuery = paginateQuery.limit(limit);
-  
-    // fields limiting
-    let fields = '__v';
-    if (query?.fields) {
-      fields = (query.fields as string).split(',').join(' ');
-    }
-    const fieldsQuery = await limitQuery.select(fields);
-  
-    return fieldsQuery;
-    */
     const studentQuery = new QueryBuilder_1.default(student_schema_1.Student.find()
         .populate('user')
         .populate('admissionSemester')

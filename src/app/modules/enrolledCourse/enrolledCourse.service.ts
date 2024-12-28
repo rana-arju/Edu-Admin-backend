@@ -30,6 +30,7 @@ const createEnrolledCourseIntoDb = async (
   if (isOfferedCourseExist.maxCapacity <= 0) {
     throw new AppError(400, 'This course is full!');
   }
+
   const student = await Student.findOne({ id }, { _id: 1 });
   if (!student) {
     throw new AppError(404, 'This student not exist!');

@@ -37,7 +37,10 @@ const userSchema = new mongoose_1.Schema({
         enum: ['in-progress', 'blocked'],
         default: 'in-progress',
     },
-    role: { type: String, enum: ['faculty', 'student', 'admin'] },
+    role: {
+        type: String,
+        enum: ['faculty', 'student', 'admin', 'superAdmin'],
+    },
     isDeleted: { type: Boolean, default: false },
 }, { timestamps: true });
 userSchema.pre('save', function (next) {

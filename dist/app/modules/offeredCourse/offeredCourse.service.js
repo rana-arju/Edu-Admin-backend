@@ -13,16 +13,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.offeredCourseServices = void 0;
+const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const academicDepartment_model_1 = require("../academicDepartment/academicDepartment.model");
 const academicFaculty_model_1 = require("../academicFaculty/academicFaculty.model");
 const course_model_1 = require("../course/course.model");
 const faculty_schema_1 = require("../faculty/faculty.schema");
 const semesterRegistration_model_1 = require("../semesterRegistration/semesterRegistration.model");
+const student_schema_1 = require("../student/student.schema");
+const offeredCourse_constant_1 = require("./offeredCourse.constant");
 const offeredCourse_model_1 = require("./offeredCourse.model");
 const offeredCourse_utils_1 = require("./offeredCourse.utils");
 const createOfferedCourseIntoDb = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { semesterRegistration, academicDepartment, academicFaculty, course, faculty, section, days, startTime, endTime, } = payload;
+    /**
+     * Step 1: check if the semester registration id is exists!
+     * Step 2: check if the academic faculty id is exists!
+     * Step 3: check if the academic department id is exists!
+     * Step 4: check if the course id is exists!
+     * Step 5: check if the faculty id is exists!
+     * Step 6: check if the department is belong to the  faculty
+     * Step 7: check if the same offered course same section in same registered semester exists
+     * Step 8: get the schedules of the faculties
+     * Step 9: check if the faculty is available at that time. If not then throw error
+     * Step 10: create the offered course
+     */
     const assignSchedules = yield offeredCourse_model_1.OfferedCourse.find({
         semesterRegistration,
         faculty,
@@ -66,8 +81,8 @@ const createOfferedCourseIntoDb = (payload) => __awaiter(void 0, void 0, void 0,
         throw new AppError_1.default(404, 'This Faculty not exist!');
     }
     const isDuplicateOfferedCourse = yield offeredCourse_model_1.OfferedCourse.findOne({
-        academicFaculty,
-        academicDepartment,
+        semesterRegistration,
+        course,
         section,
     });
     if (isDuplicateOfferedCourse) {
@@ -114,10 +129,106 @@ const getSingleOfferedCourseFromDB = (id) => __awaiter(void 0, void 0, void 0, f
     const result = yield offeredCourse_model_1.OfferedCourse.findById(id);
     return result;
 });
-// Get all semester
-const getAllOfferedCourseFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield offeredCourse_model_1.OfferedCourse.find();
+// get my offer course
+const getMyOfferedCourseFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const studentExist = yield student_schema_1.Student.findOne({ id });
+    if (!studentExist) {
+        throw new AppError_1.default(404, 'Student not found');
+    }
+    //current ongoin semester
+    const currentOngoingRegisterSemester = yield semesterRegistration_model_1.SemesterRegistration.findOne({
+        status: 'ONGOING',
+    });
+    if (!currentOngoingRegisterSemester) {
+        throw new AppError_1.default(404, 'Semester Registration not found');
+    }
+    const result = yield offeredCourse_model_1.OfferedCourse.aggregate([
+        {
+            $match: {
+                semesterRegistration: currentOngoingRegisterSemester._id,
+                academicDepartment: studentExist.academicDepartment,
+                academicFaculty: studentExist.academicFaculty,
+            },
+        },
+        {
+            $lookup: {
+                from: 'courses',
+                localField: 'course',
+                foreignField: '_id',
+                as: 'course',
+            },
+        },
+        {
+            $unwind: '$course',
+        },
+        {
+            $lookup: {
+                from: 'enrolledcourses',
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $and: [
+                                    {
+                                        $eq: [
+                                            '$semesterRegistration',
+                                            currentOngoingRegisterSemester._id,
+                                        ],
+                                    },
+                                    {
+                                        $eq: ['$student', studentExist._id],
+                                    },
+                                    {
+                                        $eq: ['$isEnrolled', true],
+                                    },
+                                ],
+                            },
+                        },
+                    },
+                ],
+                as: 'enrolledCourses',
+            },
+        },
+        {
+            $addFields: {
+                isAlreadyEnrolled: {
+                    $in: [
+                        '$course._id',
+                        {
+                            $map: {
+                                input: '$enrolledCourses',
+                                as: 'enroll',
+                                in: '$$enroll.course',
+                            },
+                        },
+                    ],
+                },
+            },
+        },
+        {
+            $match: {
+                isAlreadyEnrolled: false,
+            },
+        },
+    ]);
     return result;
+});
+// Get all semester
+const getAllOfferedCourseFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    const offeredCourseQuery = new QueryBuilder_1.default(offeredCourse_model_1.OfferedCourse.find()
+        .populate('semesterRegistration')
+        .populate('academicFaculty')
+        .populate('academicDepartment')
+        .populate('course')
+        .populate('faculty'), query)
+        .search(offeredCourse_constant_1.OfferedCoursesearchAbleField)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+    const result = yield offeredCourseQuery.modelQuery;
+    const meta = yield offeredCourseQuery.countTotal();
+    return { result, meta };
 });
 const deleteOfferedCourseFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     /**
@@ -143,4 +254,5 @@ exports.offeredCourseServices = {
     updateOfferedCourseIntoDB,
     getAllOfferedCourseFromDB,
     deleteOfferedCourseFromDB,
+    getMyOfferedCourseFromDB,
 };

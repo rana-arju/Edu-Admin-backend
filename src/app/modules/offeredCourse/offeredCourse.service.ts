@@ -1,9 +1,12 @@
+import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/AppError';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 import { AcademicFaculty } from '../academicFaculty/academicFaculty.model';
 import { Course } from '../course/course.model';
 import { Faculty } from '../faculty/faculty.schema';
 import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
+import { Student } from '../student/student.schema';
+import { OfferedCoursesearchAbleField } from './offeredCourse.constant';
 import { IOfferedCourse } from './offeredCourse.interface';
 import { OfferedCourse } from './offeredCourse.model';
 import { hasTimeConflict } from './offeredCourse.utils';
@@ -20,7 +23,18 @@ const createOfferedCourseIntoDb = async (payload: IOfferedCourse) => {
     startTime,
     endTime,
   } = payload;
-
+  /**
+   * Step 1: check if the semester registration id is exists!
+   * Step 2: check if the academic faculty id is exists!
+   * Step 3: check if the academic department id is exists!
+   * Step 4: check if the course id is exists!
+   * Step 5: check if the faculty id is exists!
+   * Step 6: check if the department is belong to the  faculty
+   * Step 7: check if the same offered course same section in same registered semester exists
+   * Step 8: get the schedules of the faculties
+   * Step 9: check if the faculty is available at that time. If not then throw error
+   * Step 10: create the offered course
+   */
   const assignSchedules = await OfferedCourse.find({
     semesterRegistration,
     faculty,
@@ -74,8 +88,8 @@ const createOfferedCourseIntoDb = async (payload: IOfferedCourse) => {
     throw new AppError(404, 'This Faculty not exist!');
   }
   const isDuplicateOfferedCourse = await OfferedCourse.findOne({
-    academicFaculty,
-    academicDepartment,
+    semesterRegistration,
+    course,
     section,
   });
   if (isDuplicateOfferedCourse) {
@@ -143,10 +157,112 @@ const getSingleOfferedCourseFromDB = async (id: string) => {
 
   return result;
 };
-// Get all semester
-const getAllOfferedCourseFromDB = async () => {
-  const result = await OfferedCourse.find();
+
+// get my offer course
+const getMyOfferedCourseFromDB = async (id: string) => {
+  const studentExist = await Student.findOne({ id });
+  if (!studentExist) {
+    throw new AppError(404, 'Student not found');
+  }
+
+  //current ongoin semester
+  const currentOngoingRegisterSemester = await SemesterRegistration.findOne({
+    status: 'ONGOING',
+  });
+  if (!currentOngoingRegisterSemester) {
+    throw new AppError(404, 'Semester Registration not found');
+  }
+  const result = await OfferedCourse.aggregate([
+    {
+      $match: {
+        semesterRegistration: currentOngoingRegisterSemester._id,
+        academicDepartment: studentExist.academicDepartment,
+        academicFaculty: studentExist.academicFaculty,
+      },
+    },
+    {
+      $lookup: {
+        from: 'courses',
+        localField: 'course',
+        foreignField: '_id',
+        as: 'course',
+      },
+    },
+    {
+      $unwind: '$course',
+    },
+    {
+      $lookup: {
+        from: 'enrolledcourses',
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: [
+                      '$semesterRegistration',
+                      currentOngoingRegisterSemester._id,
+                    ],
+                  },
+                  {
+                    $eq: ['$student', studentExist._id],
+                  },
+                  {
+                    $eq: ['$isEnrolled', true],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        as: 'enrolledCourses',
+      },
+    },
+    {
+      $addFields: {
+        isAlreadyEnrolled: {
+          $in: [
+            '$course._id',
+            {
+              $map: {
+                input: '$enrolledCourses',
+                as: 'enroll',
+                in: '$$enroll.course',
+              },
+            },
+          ],
+        },
+      },
+    },
+    {
+      $match: {
+        isAlreadyEnrolled: false,
+      },
+    },
+  ]);
   return result;
+};
+// Get all semester
+const getAllOfferedCourseFromDB = async (query: Record<string, unknown>) => {
+  const offeredCourseQuery = new QueryBuilder(
+    OfferedCourse.find()
+      .populate('semesterRegistration')
+      .populate('academicFaculty')
+      .populate('academicDepartment')
+      .populate('course')
+      .populate('faculty'),
+
+    query,
+  )
+    .search(OfferedCoursesearchAbleField)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+  const result = await offeredCourseQuery.modelQuery;
+  const meta = await offeredCourseQuery.countTotal();
+  return { result, meta };
 };
 
 const deleteOfferedCourseFromDB = async (id: string) => {
@@ -184,4 +300,5 @@ export const offeredCourseServices = {
   updateOfferedCourseIntoDB,
   getAllOfferedCourseFromDB,
   deleteOfferedCourseFromDB,
+  getMyOfferedCourseFromDB,
 };

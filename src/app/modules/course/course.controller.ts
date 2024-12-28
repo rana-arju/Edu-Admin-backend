@@ -32,6 +32,21 @@ const getSingleCourse = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getCourseFaculty = catchAsync(async (req, res) => {
+  const id = req.params.id;
+
+  // will call service func to send this data
+  const result = await courseServices.getCourseFacultyFromDB(id);
+
+  // send response
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Course faculty get succesful',
+    data: result,
+  });
+});
 const getAllCourses = catchAsync(async (req, res) => {
   const query = req.query;
   // will call service func to send this data
@@ -123,4 +138,5 @@ export const courseController = {
   getAllCourses,
   assignFaculties,
   removeFacultyFromCourse,
+  getCourseFaculty,
 };
