@@ -49,7 +49,8 @@ const getAllRegisteredSemester = catchAsync(async (req, res) => {
     success: true,
     statusCode: 200,
     message: 'Register Semester get succesfully',
-    data: result,
+    data: result?.result,
+    meta: result?.meta,
   });
 });
 const updateSingleRegisteredSemester = catchAsync(async (req, res) => {

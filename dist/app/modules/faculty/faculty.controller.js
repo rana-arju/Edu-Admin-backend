@@ -27,13 +27,13 @@ const getSingleFaculty = (0, catchAsync_1.default)((req, res) => __awaiter(void 
     });
 }));
 const getAllFaculties = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req);
     const result = yield faculty_service_1.FacultyServices.getAllFacultiesFromDB(req.query);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
         message: 'Faculties are retrieved succesfully',
-        data: result,
+        data: result === null || result === void 0 ? void 0 : result.result,
+        meta: result === null || result === void 0 ? void 0 : result.meta,
     });
 }));
 const updateFaculty = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

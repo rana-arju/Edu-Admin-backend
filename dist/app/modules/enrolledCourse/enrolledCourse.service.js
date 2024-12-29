@@ -23,6 +23,7 @@ const semesterRegistration_model_1 = require("../semesterRegistration/semesterRe
 const course_model_1 = require("../course/course.model");
 const faculty_schema_1 = require("../faculty/faculty.schema");
 const enrolledCourse_utils_1 = require("./enrolledCourse.utils");
+const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const createEnrolledCourseIntoDb = (payload, id) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     /**
@@ -184,7 +185,24 @@ const updateEnrolledCourseIntoDb = (payload, id) => __awaiter(void 0, void 0, vo
     }
     return result;
 });
+const getMyEnrolledCourse = (id, query) => __awaiter(void 0, void 0, void 0, function* () {
+    const isExistStudent = yield student_schema_1.Student.findOne({ id }).select('_id');
+    if (!isExistStudent) {
+        throw new AppError_1.default(404, 'This student not exist!');
+    }
+    const myEnrolledCourseQuery = new QueryBuilder_1.default(enrolledCourse_model_1.EnrolledCourse.find({
+        student: isExistStudent._id,
+    }).populate('semesterRegistration academicSemester academicFaculty academicDepartment offeredCourse course faculty student'), query)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+    const result = yield myEnrolledCourseQuery.modelQuery;
+    const meta = yield myEnrolledCourseQuery.countTotal();
+    return { result, meta };
+});
 exports.enrolledCourseServices = {
     createEnrolledCourseIntoDb,
     updateEnrolledCourseIntoDb,
+    getMyEnrolledCourse,
 };

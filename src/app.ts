@@ -11,7 +11,7 @@ app.use(express.json());
 
 // cors
 
-app.use(cors({ origin: ['http://localhost:3000'] }));
+app.use(cors({ origin: ['http://localhost:3000'], credentials: true }));
 app.use(cookieParser());
 
 // application routes

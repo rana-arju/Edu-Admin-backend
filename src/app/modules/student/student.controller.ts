@@ -13,7 +13,8 @@ const getAllStudent = catchAsync(async (req, res) => {
     success: true,
     statusCode: 200,
     message: 'Students get succesfully',
-    data: result,
+    data: result?.result,
+    meta: result?.meta,
   });
 });
 

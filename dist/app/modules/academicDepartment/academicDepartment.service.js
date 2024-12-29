@@ -34,7 +34,8 @@ const getAllAcademicDepartmentFromDB = (query) => __awaiter(void 0, void 0, void
         .paginate()
         .fields();
     const result = yield academicDepartmentQuery.modelQuery;
-    return result;
+    const meta = yield academicDepartmentQuery.countTotal();
+    return { result, meta };
 });
 // Update single semester
 const updateSingleAcademicDepartmentIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {

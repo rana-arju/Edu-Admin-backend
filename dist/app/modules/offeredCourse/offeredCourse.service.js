@@ -130,7 +130,11 @@ const getSingleOfferedCourseFromDB = (id) => __awaiter(void 0, void 0, void 0, f
     return result;
 });
 // get my offer course
-const getMyOfferedCourseFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const getMyOfferedCourseFromDB = (id, query) => __awaiter(void 0, void 0, void 0, function* () {
+    /// pagination setup
+    const page = Number(query === null || query === void 0 ? void 0 : query.page) || 1;
+    const limit = Number(query === null || query === void 0 ? void 0 : query.limit) || 10;
+    const skip = (page - 1) * limit || 0;
     const studentExist = yield student_schema_1.Student.findOne({ id });
     if (!studentExist) {
         throw new AppError_1.default(404, 'Student not found');
@@ -142,7 +146,7 @@ const getMyOfferedCourseFromDB = (id) => __awaiter(void 0, void 0, void 0, funct
     if (!currentOngoingRegisterSemester) {
         throw new AppError_1.default(404, 'Semester Registration not found');
     }
-    const result = yield offeredCourse_model_1.OfferedCourse.aggregate([
+    const aggregationQuery = [
         {
             $match: {
                 semesterRegistration: currentOngoingRegisterSemester._id,
@@ -190,7 +194,42 @@ const getMyOfferedCourseFromDB = (id) => __awaiter(void 0, void 0, void 0, funct
             },
         },
         {
+            $lookup: {
+                from: 'enrolledcourses',
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $and: [
+                                    {
+                                        $eq: ['$student', studentExist._id],
+                                    },
+                                    {
+                                        $eq: ['$isCompleted', true],
+                                    },
+                                ],
+                            },
+                        },
+                    },
+                ],
+                as: 'completedCoursesIds',
+            },
+        },
+        {
             $addFields: {
+                isPreRequisitesFulfilled: {
+                    $or: [
+                        {
+                            $eq: ['$course.preRequisiteCourses', []],
+                        },
+                        {
+                            $setIsSubset: [
+                                '$course.preRequisiteCourses.course',
+                                '$completedCoursesIds',
+                            ],
+                        },
+                    ],
+                },
                 isAlreadyEnrolled: {
                     $in: [
                         '$course._id',
@@ -206,12 +245,52 @@ const getMyOfferedCourseFromDB = (id) => __awaiter(void 0, void 0, void 0, funct
             },
         },
         {
-            $match: {
-                isAlreadyEnrolled: false,
+            $addFields: {
+                completedCourse: {
+                    $map: {
+                        input: '$completedCourses',
+                        as: 'completed',
+                        in: '$$completed.course',
+                    },
+                },
             },
         },
+        {
+            $match: {
+                isAlreadyEnrolled: false,
+                isPreRequisitesFulfilled: true,
+            },
+        },
+        {
+            $skip: skip,
+        },
+        {
+            $limit: limit,
+        },
+    ];
+    const paginationQuery = [
+        {
+            $skip: skip,
+        },
+        {
+            $limit: limit,
+        },
+    ];
+    const result = yield offeredCourse_model_1.OfferedCourse.aggregate([
+        ...aggregationQuery,
+        ...paginationQuery,
     ]);
-    return result;
+    const total = (yield offeredCourse_model_1.OfferedCourse.aggregate(aggregationQuery)).length;
+    const totalPages = Math.ceil(total / limit);
+    return {
+        meta: {
+            page,
+            limit,
+            totalPages,
+            total,
+        },
+        result,
+    };
 });
 // Get all semester
 const getAllOfferedCourseFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {

@@ -56,7 +56,7 @@ const getMyOfferedCourse = (0, catchAsync_1.default)((req, res) => __awaiter(voi
     var _a;
     const id = (_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a.userId;
     // will call service func to send this data
-    const result = yield offeredCourse_service_1.offeredCourseServices.getMyOfferedCourseFromDB(id);
+    const result = yield offeredCourse_service_1.offeredCourseServices.getMyOfferedCourseFromDB(id, req.query);
     // send response
     (0, sendResponse_1.default)(res, {
         success: true,
@@ -74,7 +74,8 @@ const getAllOfferedCourse = (0, catchAsync_1.default)((req, res) => __awaiter(vo
         success: true,
         statusCode: 200,
         message: 'Offered Course get succesfully',
-        data: result,
+        data: result === null || result === void 0 ? void 0 : result.result,
+        meta: result === null || result === void 0 ? void 0 : result.meta,
     });
 }));
 // offered Course delete

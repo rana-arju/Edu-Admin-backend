@@ -25,7 +25,8 @@ const getAllStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         success: true,
         statusCode: 200,
         message: 'Students get succesfully',
-        data: result,
+        data: result === null || result === void 0 ? void 0 : result.result,
+        meta: result === null || result === void 0 ? void 0 : result.meta,
     });
 }));
 const getStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

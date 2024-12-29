@@ -38,8 +38,9 @@ const getAllAdminsFromDB = (query) => __awaiter(void 0, void 0, void 0, function
         .sort()
         .paginate()
         .fields();
+    const meta = yield adminQuery.countTotal();
     const result = yield adminQuery.modelQuery;
-    return result;
+    return { result, meta };
 });
 const getSingleAdminFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield admin_schema_1.Admin.findById(id);

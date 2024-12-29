@@ -57,7 +57,10 @@ const getMyOfferedCourse = catchAsync(async (req, res) => {
   const id = req?.user?.userId;
 
   // will call service func to send this data
-  const result = await offeredCourseServices.getMyOfferedCourseFromDB(id, req.query);
+  const result = await offeredCourseServices.getMyOfferedCourseFromDB(
+    id,
+    req.query,
+  );
 
   // send response
 
@@ -80,7 +83,8 @@ const getAllOfferedCourse = catchAsync(async (req, res) => {
     success: true,
     statusCode: 200,
     message: 'Offered Course get succesfully',
-    data: result,
+    data: result?.result,
+    meta: result?.meta,
   });
 });
 // offered Course delete

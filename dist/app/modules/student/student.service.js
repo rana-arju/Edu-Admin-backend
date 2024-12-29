@@ -34,12 +34,7 @@ const getAllStudentFromDB = (query) => __awaiter(void 0, void 0, void 0, functio
     const studentQuery = new QueryBuilder_1.default(student_schema_1.Student.find()
         .populate('user')
         .populate('admissionSemester')
-        .populate({
-        path: 'academicDepartment',
-        populate: {
-            path: 'academicFaculty',
-        },
-    }), query)
+        .populate('academicDepartment academicFaculty'), query)
         .search(student_constant_1.studentSearchableField)
         .filter()
         .sort()

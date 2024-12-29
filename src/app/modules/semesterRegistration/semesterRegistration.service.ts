@@ -67,7 +67,9 @@ const getAllRegisteredSemesterFromDB = async (
     .paginate()
     .fields();
   const result = await registeredSemesterQuery.modelQuery;
-  return result;
+  const meta = await registeredSemesterQuery.countTotal();
+
+  return { result, meta };
 };
 // Update single semester
 const updateSingleRegisterSemestertIntoDB = async (

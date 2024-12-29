@@ -64,7 +64,8 @@ const getAllRegisteredSemesterFromDB = (query) => __awaiter(void 0, void 0, void
         .paginate()
         .fields();
     const result = yield registeredSemesterQuery.modelQuery;
-    return result;
+    const meta = yield registeredSemesterQuery.countTotal();
+    return { result, meta };
 });
 // Update single semester
 const updateSingleRegisterSemestertIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {

@@ -32,14 +32,15 @@ const user_model_1 = require("../user/user.model");
 const faculty_constant_1 = require("./faculty.constant");
 const faculty_schema_1 = require("./faculty.schema");
 const getAllFacultiesFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const facultyQuery = new QueryBuilder_1.default(faculty_schema_1.Faculty.find().populate('academicDepartment'), query)
+    const facultyQuery = new QueryBuilder_1.default(faculty_schema_1.Faculty.find().populate('academicDepartment academicFaculty'), query)
         .search(faculty_constant_1.FacultySearchableFields)
         .filter()
         .sort()
         .paginate()
         .fields();
     const result = yield facultyQuery.modelQuery;
-    return result;
+    const meta = yield facultyQuery.countTotal();
+    return { result, meta };
 });
 const getSingleFacultyFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield faculty_schema_1.Faculty.findById(id).populate('academicDepartment');

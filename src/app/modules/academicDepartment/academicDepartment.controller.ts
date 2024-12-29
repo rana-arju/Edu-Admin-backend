@@ -46,7 +46,8 @@ const getAllAcademicDepartment = catchAsync(async (req, res) => {
     success: true,
     statusCode: 200,
     message: 'Academic department get succesfully',
-    data: result,
+    data: result?.result,
+    meta: result?.meta,
   });
 });
 const updateSingleAcademicDepartment = catchAsync(async (req, res) => {

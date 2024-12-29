@@ -9,6 +9,7 @@ import { SemesterRegistration } from '../semesterRegistration/semesterRegistrati
 import { Course } from '../course/course.model';
 import { Faculty } from '../faculty/faculty.schema';
 import { calculateGradeAndPoints } from './enrolledCourse.utils';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 const createEnrolledCourseIntoDb = async (
   payload: IEnrolledCourse,
@@ -208,7 +209,35 @@ const updateEnrolledCourseIntoDb = async (
   }
   return result;
 };
+
+const getMyEnrolledCourse = async (
+  id: string,
+  query: Record<string, unknown>,
+) => {
+  const isExistStudent = await Student.findOne({ id }).select('_id');
+  if (!isExistStudent) {
+    throw new AppError(404, 'This student not exist!');
+  }
+
+  const myEnrolledCourseQuery = new QueryBuilder(
+    EnrolledCourse.find({
+      student: isExistStudent._id,
+    }).populate(
+      'semesterRegistration academicSemester academicFaculty academicDepartment offeredCourse course faculty student',
+    ),
+
+    query,
+  )
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+  const result = await myEnrolledCourseQuery.modelQuery;
+  const meta = await myEnrolledCourseQuery.countTotal();
+  return { result, meta };
+};
 export const enrolledCourseServices = {
   createEnrolledCourseIntoDb,
   updateEnrolledCourseIntoDb,
+  getMyEnrolledCourse,
 };

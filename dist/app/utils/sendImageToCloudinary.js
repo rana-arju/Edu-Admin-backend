@@ -19,12 +19,7 @@ const sendImageToCloudinaryService = (path, imageName) => {
             if (error) {
                 reject(error);
             }
-            if (result) {
-                resolve(result);
-            }
-            else {
-                reject(new Error('Upload result is undefined'));
-            }
+            resolve(result);
             // delete a file asynchronously
             fs_1.default.unlink(path, (err) => {
                 if (err) {

@@ -325,7 +325,7 @@ const getMyOfferedCourseFromDB = async (
       totalPages,
       total,
     },
-    result
+    result,
   };
 };
 // Get all semester

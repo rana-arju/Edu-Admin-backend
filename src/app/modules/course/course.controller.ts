@@ -57,7 +57,8 @@ const getAllCourses = catchAsync(async (req, res) => {
     success: true,
     statusCode: 200,
     message: 'Courses get succesfully',
-    data: result,
+    data: result?.result,
+    meta: result?.meta,
   });
 });
 const updateSingleCourse = catchAsync(async (req, res) => {

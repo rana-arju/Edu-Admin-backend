@@ -28,7 +28,9 @@ const getAllAcademicDepartmentFromDB = async (
     .paginate()
     .fields();
   const result = await academicDepartmentQuery.modelQuery;
-  return result;
+  const meta = await academicDepartmentQuery.countTotal();
+
+  return { result, meta };
 };
 // Update single semester
 const updateSingleAcademicDepartmentIntoDB = async (
