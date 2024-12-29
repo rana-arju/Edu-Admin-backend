@@ -57,7 +57,7 @@ const getMyOfferedCourse = catchAsync(async (req, res) => {
   const id = req?.user?.userId;
 
   // will call service func to send this data
-  const result = await offeredCourseServices.getMyOfferedCourseFromDB(id);
+  const result = await offeredCourseServices.getMyOfferedCourseFromDB(id, req.query);
 
   // send response
 
