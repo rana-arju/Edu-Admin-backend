@@ -23,8 +23,14 @@ const auth = (...requiredRoles) => {
         if (!token) {
             throw new AppError_1.default(401, 'You are unauthorized to access');
         }
+        let decoded;
         // if token is valid check
-        const decoded = jsonwebtoken_1.default.verify(token, config_1.default === null || config_1.default === void 0 ? void 0 : config_1.default.token);
+        try {
+            decoded = jsonwebtoken_1.default.verify(token, config_1.default === null || config_1.default === void 0 ? void 0 : config_1.default.token);
+        }
+        catch (error) {
+            throw new AppError_1.default(401, 'You are unauthorized to access');
+        }
         const { role, userId, iat } = decoded;
         const user = yield user_model_1.User.isUserExistByCustomId(userId);
         if (!user) {

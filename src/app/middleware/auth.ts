@@ -13,9 +13,13 @@ const auth = (...requiredRoles: IUserRole[]) => {
     if (!token) {
       throw new AppError(401, 'You are unauthorized to access');
     }
-
+    let decoded;
     // if token is valid check
-    const decoded = jwt.verify(token, config?.token as string) as JwtPayload;
+    try {
+      decoded = jwt.verify(token, config?.token as string) as JwtPayload;
+    } catch (error) {
+      throw new AppError(401, 'You are unauthorized to access');
+    }
 
     const { role, userId, iat } = decoded;
     const user = await User.isUserExistByCustomId(userId);

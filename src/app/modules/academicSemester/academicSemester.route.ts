@@ -7,7 +7,7 @@ import { USER_ROLE } from '../user/user.constant';
 const router = express.Router();
 
 router.get(
-  '/get-academic-semester',
+  '/',
   auth(
     USER_ROLE.superAdmin,
     USER_ROLE.admin,

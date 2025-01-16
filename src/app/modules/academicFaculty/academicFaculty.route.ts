@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get(
   '/get-academic-faculty',
-  academicFacultyController.getSingleAcademicFaculty,
+  academicFacultyController.getAllAcademicFaculty,
 );
 
 router.post(
