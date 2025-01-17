@@ -21,7 +21,6 @@ const createAcademicSemesterRegistration = catchAsync(async (req, res) => {
 
 const getSingleRegisteredSemester = catchAsync(async (req, res) => {
   const id = req.params.id;
-  console.log(id);
 
   // will call service func to send this data
   const result =

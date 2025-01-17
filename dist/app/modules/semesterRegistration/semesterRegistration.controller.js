@@ -29,7 +29,6 @@ const createAcademicSemesterRegistration = (0, catchAsync_1.default)((req, res) 
 }));
 const getSingleRegisteredSemester = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
-    console.log(id);
     // will call service func to send this data
     const result = yield semesterRegistration_service_1.semesterRegistrationServices.getSingleRegisteredSemesterFromDB(id);
     // send response
