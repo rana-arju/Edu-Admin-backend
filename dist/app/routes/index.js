@@ -12,6 +12,7 @@ const semesterRegistration_route_1 = require("../modules/semesterRegistration/se
 const offeredCourse_route_1 = require("../modules/offeredCourse/offeredCourse.route");
 const auth_route_1 = require("../modules/auth/auth.route");
 const enrolledCourse_route_1 = require("../modules/enrolledCourse/enrolledCourse.route");
+const admin_route_1 = require("../modules/admin/admin.route");
 const router = (0, express_1.Router)();
 const moduleRoute = [
     { path: '/users', route: user_route_1.UserRoutes },
@@ -20,6 +21,7 @@ const moduleRoute = [
     { path: '/academic-faculty', route: academicFaculty_route_1.AcademicFacultyRoutes },
     { path: '/academic-department', route: academicDepartment_route_1.AcademicDepartmentRoutes },
     { path: '/faculties', route: faculty_route_1.FacultyRoutes },
+    { path: '/admin', route: admin_route_1.AdminRoutes },
     { path: '/courses', route: course_route_1.CourseRouter },
     { path: '/semester-registrations', route: semesterRegistration_route_1.SemesterRegistrationRoutes },
     { path: '/offered-course', route: offeredCourse_route_1.OfferedCourseRoutes },

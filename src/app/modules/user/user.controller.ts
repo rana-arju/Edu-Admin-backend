@@ -72,6 +72,8 @@ const getMe = catchAsync(async (req, res) => {
 
 const userStatusChange = catchAsync(async (req, res) => {
   const { status } = req.body;
+  console.log(status);
+  
 
   const result = await UserServices.userStatusChangeIntoDB(
     req.params.id,

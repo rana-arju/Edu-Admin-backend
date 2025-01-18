@@ -9,7 +9,7 @@ import { Faculty } from './faculty.schema';
 
 const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
   const facultyQuery = new QueryBuilder(
-    Faculty.find().populate('academicDepartment academicFaculty'),
+    Faculty.find().populate('academicDepartment academicFaculty user'),
     query,
   )
     .search(FacultySearchableFields)

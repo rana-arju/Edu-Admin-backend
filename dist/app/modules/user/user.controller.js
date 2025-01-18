@@ -61,6 +61,7 @@ const getMe = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, 
 }));
 const userStatusChange = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { status } = req.body;
+    console.log(status);
     const result = yield user_service_1.UserServices.userStatusChangeIntoDB(req.params.id, status);
     (0, sendResponse_1.default)(res, {
         statusCode: 201,

@@ -32,7 +32,7 @@ const user_model_1 = require("../user/user.model");
 const faculty_constant_1 = require("./faculty.constant");
 const faculty_schema_1 = require("./faculty.schema");
 const getAllFacultiesFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const facultyQuery = new QueryBuilder_1.default(faculty_schema_1.Faculty.find().populate('academicDepartment academicFaculty'), query)
+    const facultyQuery = new QueryBuilder_1.default(faculty_schema_1.Faculty.find().populate('academicDepartment academicFaculty user'), query)
         .search(faculty_constant_1.FacultySearchableFields)
         .filter()
         .sort()
